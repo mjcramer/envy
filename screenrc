@@ -1,0 +1,24 @@
+# Turn off startup message
+startup_message off
+
+# Don't use CTRL-A as the trigger because its stops the bash
+# cli navigation like CTRL-A for start of line to stop working
+escape ``
+
+# We'd like to scroll in an xterm please
+defscrollback 1024
+
+# http://superuser.com/questions/126606/how-to-get-mac-os-x-terminal-app-and-screen-vim-scrolling-to-play-nice/316900#316900
+termcapinfo xterm-256color|xterm-color|xterm|xterms|xs|rxvt ti@:te@
+
+# Allow bold colors - necessary for some reason
+attrcolor b ".I"
+
+# Detach session on hangup
+autodetach on
+
+# Change the hardstatus settings to give an window list at the bottom of the
+# screen with the current window highlighted
+hardstatus alwayslastline
+#hardstatus string '%{= kG}%{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}'
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{=kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{C}%Y-%m-%d %{W}%c:%s %{g}]'

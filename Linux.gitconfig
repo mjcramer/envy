@@ -1,0 +1,25 @@
+[user]
+	name = Michael Cramer
+	email = michael@cramer.name
+
+[push]
+	default = matching
+
+[branch]
+	autosetuprebase = always
+
+[color]
+	ui = true
+
+[core]
+	editor = vim 
+	autocrlf = input
+
+[diff]
+	tool = bc3
+
+[difftool]
+	prompt = false
+
+[merge]
+	tool = bc3

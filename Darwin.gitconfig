@@ -1,0 +1,58 @@
+[user]
+	name = Michael Cramer
+	email = michael.cramer@creditkarma.com
+
+[push]
+	default = current 
+
+[branch]
+	autosetuprebase = always
+
+[color]
+	ui = true
+
+[core]
+	editor = vim 
+	autocrlf = input
+	excludesfile = /Users/michael.cramer/.gitignore_global
+
+[diff]
+	tool = bcomp
+	;tool = vimdiff
+
+[difftool]
+	prompt = false
+
+[merge]
+	tool = bcomp
+	;tool = vimdiff 
+
+[difftool "bcomp"]
+    trustExitCode = true
+    cmd = "/usr/local/bin/bcomp" "$LOCAL" "$REMOTE"
+
+[merge]
+    tool = bcomp
+	;tool = vimdiff
+
+[mergetool]
+    prompt = false
+
+[mergetool "bcomp"]
+    trustExitCode = true
+    cmd = "/usr/local/bin/bcomp" "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
+
+[filter "hawser"]
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+	required = true
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true

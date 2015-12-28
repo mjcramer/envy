@@ -1,0 +1,2 @@
+export M2_HOME=/usr/share/maven
+export JAVA_HOME=/usr/lib/jvm/jdk1.7.0_25

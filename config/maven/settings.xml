@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd"
+          xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <!-- Tout Servers -->
+    <!-- Enable these for publishing and deploying
+    <servers>
+        <server>
+            <id>tout-repo-release</id>
+            <username>${env.USER}</username>
+            <password>secret</password>
+        </server>
+        <server>
+            <id>tout-repo-snapshot</id>
+            <username>${env.USER}</username>
+            <password>secret</password>
+        </server>
+        <server>
+            <id>github</id>
+            <username>${env.USER}</username>
+            <password>secret</password>
+        </server>
+    </servers>
+    -->
+
+    <profiles>
+        <profile>
+            <id>tout-repo-sfoffice</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>tout-repo-snapshot</id>
+                    <name>Tout Library Snapshots</name>
+                    <url>http://tout-repo.local/artifactory/libs-snapshot</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>tout-repo-release</id>
+                    <name>Tout Library Releases</name>
+                    <url>http://tout-repo.local/artifactory/libs-release</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>tout-repo-snapshot</id>
+                    <name>Tout Plugin Snapshots</name>
+                    <url>http://tout-repo.local/artifactory/plugins-snapshot</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>tout-repo-release</id>
+                    <name>Tout Plugin Releases</name>
+                    <url>http://tout-repo.local/artifactory/plugins-release</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+
+        <profile>
+            <id>tout-repo-tunnel</id>
+            <repositories>
+                <repository>
+                    <id>tout-repo-snapshot</id>
+                    <name>Tout Library Snapshots</name>
+                    <url>http://localhost:8081/artifactory/libs-snapshot-local</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>tout-repo-snapshot-ext</id>
+                    <name>Tout External Library Snapshots</name>
+                    <url>http://localhost:8081/artifactory/ext-snapshot-local</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>tout-repo-release</id>
+                    <name>Tout Library Releases</name>
+                    <url>http://localhost:8081/artifactory/libs-release-local</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>tout-repo-release-ext</id>
+                    <name>Tout External Library Releases</name>
+                    <url>http://localhost:8081/artifactory/ext-release-local</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>tout-repo-snapshot</id>
+                    <name>Tout Plugin Snapshots</name>
+                    <url>http://localhost:8081/artifactory/plugins-snapshot-local</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>tout-repo-release</id>
+                    <name>Tout Plugin Releases</name>
+                    <url>http://localhost:8081/artifactory/plugins-release-local</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+
+    <pluginGroups>
+        <pluginGroup>org.sonatype</pluginGroup>
+    </pluginGroups>
+
+</settings>
+
