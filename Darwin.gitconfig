@@ -42,17 +42,9 @@
     trustExitCode = true
     cmd = "/usr/local/bin/bcomp" "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
 
-[filter "media"]
-	clean = git-media-clean %f
-	smudge = git-media-smudge %f
-
-[filter "hawser"]
-	clean = git hawser clean %f
-	smudge = git hawser smudge %f
-	required = true
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+[alias]
+	unstage = reset HEAD
+	undo-commit = reset --soft HEAD^
+	poh = push origin HEAD
+	puh = pull origin HEAD
+	set-upstream = !git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`

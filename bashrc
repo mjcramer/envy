@@ -94,7 +94,7 @@ fi
 
 # Add scripts directory to path
 if [ -d ~/envy/bin ]; then
-    export PATH=$PATH:~/scripts/bin
+    export PATH=$PATH:~/envy/bin
 fi
 
 # Add current directory to paht
