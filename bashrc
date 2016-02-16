@@ -36,7 +36,8 @@ case $TERM in
         ;;
 esac
 
-export PS1='\[\033[01;35m\][\w]\[\033[00m\] \[\033[01;32m\]$(prompt_text)\[\033[00m\]'
+#export PS1='\[\033[01;35m\][\w]\[\033[00m\] \[\033[01;32m\]$(prompt_text)\[\033[00m\]'
+export PS1='\[\033[01;35m\][\u@\h \w]\[\033[00m\] \[\033[01;32m\]$(prompt_text)\[\033[00m\]'
 
 # Don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
@@ -109,3 +110,10 @@ fi
 if [ -e ~/.bash_local ]; then
 	. ~/.bash_local
 fi
+
+# bash ignore case for completion
+
+bind "set completion-ignore-case on"
+bind "set show-all-if-ambiguous on"
+
+[[ $- = *i* ]] && bind TAB:menu-complete

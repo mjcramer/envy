@@ -24,7 +24,8 @@ alias pingfast='ping -c 100 -s.2'
 
 case $(uname -s) in
     Linux)
-	    alias ls='ls -F --color=auto'
+	alias rm='rm -I'
+	alias ls='ls -F --color=auto'
         alias ll='ls -lF --color=auto'
         alias lla='ls -alF --color=auto'
         alias la='ls -aF --color=auto'
@@ -35,7 +36,8 @@ case $(uname -s) in
 	;;
 
     Darwin)
-	    alias ls='ls -FG'
+	alias rm='rm -i'
+	alias ls='ls -FG'
         alias ll='ls -lFG'
         alias lla='ls -alFG'
         alias la='ls -aFG'
