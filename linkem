@@ -1,7 +1,7 @@
 #!/bin/bash
 
 link="ln -svf"
-source=$(cd $(dirname $0); pwd -P)
+source=$(cd $(dirname $0); pwd -P)/dotfiles
 excludes="$0 README.md bin applescript samples"
 type=$(uname -s)
 
