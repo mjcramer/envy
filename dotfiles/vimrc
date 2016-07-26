@@ -142,7 +142,7 @@ if has("syntax")
   syntax on
 endif
 set background=dark
-colorscheme industry
+colorscheme evening
 
 " display and characters
 set fillchars+=vert:\| 

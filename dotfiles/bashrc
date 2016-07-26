@@ -59,12 +59,6 @@ bind '"\e[D": backward-char'
 ## TAB-COMPLETION (Readline bindings) 
 ##
 
-# Perform file completion in a case insensitive fashion
-bind "set completion-ignore-case on"
-
-# Treat hyphens and underscores as equivalent
-bind "set completion-map-case on"
-
 # Display matches for ambiguous patterns at first tab press
 bind "set show-all-if-ambiguous on"
 
@@ -178,6 +172,10 @@ export PATH=$PATH:.
 if [ -e ~/.jdk ]; then
 	export JAVA_HOME=$(head -n 1 ~/.jdk | sed 's/.*\:[ \t]*//')
 fi
+
+# Set go
+
+export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
 # Local env 
 if [ -e ~/.bash_local ]; then
