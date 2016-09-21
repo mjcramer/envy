@@ -4,6 +4,7 @@ link="ln -svf"
 source=$(cd $(dirname $0); pwd -P)/dotfiles
 excludes="$0 README.md bin applescript samples"
 type=$(uname -s)
+packages_darwin="htop vim bash-completion tree wget curl git jq iperf packer terraform consul"
 
 function check_file {
 	echo "Checking file $1"
@@ -79,4 +80,13 @@ function scan_directory {
 	echo "Done with $base."
 }
 
+function install_packages {
+	case $type in
+		Darwin)
+			brew install $packages_darwin
+			;;
+	esac
+}
+
 scan_directory $source 
+install_packages 
