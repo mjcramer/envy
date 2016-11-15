@@ -9,6 +9,7 @@ alias .2='cd ../..'
 alias .3='cd ../../..'
 alias .4='cd ../../../..'
 alias .5='cd ../../../../..'
+alias less='less -r'
 alias mkdir='mkdir -pv'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
@@ -45,7 +46,7 @@ case $(uname -s) in
 	    alias nowtime=now
 	    alias nowdate='date +"%d-%m-%Y"'
 	    alias listening='lsof -Pn -i4TCP -sTCP:LISTEN'
-        alias vi=/usr/local/bin/vim
+      alias vi=/usr/local/bin/vim
 #	alias ipt='sudo /sbin/iptables'
 #	alias iptlist='sudo /sbin/iptables -L -n -v --line-numbers'
 #	alias iptlistin='sudo /sbin/iptables -L INPUT -n -v --line-numbers'
