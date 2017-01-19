@@ -126,10 +126,10 @@ case $TERM in
         ;;
 esac
 
-if [ -f .ansi_colors ]; then
-  source .ansi_colors
+if [ -f ~/.ansi_colors ]; then
+  source ~/.ansi_colors
 else
-  echo "Cannot find .ansi_colors"
+  echo "Cannot find ~/.ansi_colors"
 fi
 
 # echo -e "testing \033[38;5;196;48;5;21mCOLOR1\033[38;5;208;48;5;159mCOLOR2\033[m"
