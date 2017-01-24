@@ -42,7 +42,7 @@ case $(uname -s) in
         alias la='ls -aFG'
         alias l='ls -CFG'
 	    alias l.='ls -dG .*'
-	    alias now='date +"%T'
+	    alias now='date +"%T"'
 	    alias nowtime=now
 	    alias nowdate='date +"%d-%m-%Y"'
 	    alias listening='lsof -Pn -i4TCP -sTCP:LISTEN'
