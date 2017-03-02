@@ -135,9 +135,9 @@ fi
 # echo -e "testing \033[38;5;196;48;5;21mCOLOR1\033[38;5;208;48;5;159mCOLOR2\033[m"
 
 # Primary prompt
-PS1='\['$f_wht_i'\]\D{%H:%M:%S} \['$reset'\]'$f_mag_b'\][\w]\['$reset'\] \['$f_grn_b'$(prompt_text)\['$reset'\]'
+PS1='\['$f_wht_i'\]\D{%H:%M:%S} \['$reset'\]\['$f_mag_b'\][\w]\['$reset'\] \['$f_grn_b'\]$(prompt_text)\['$reset'\]'
 # Prompt for incomplete input (like when you forget closing quotes)
-PS2='\['$f_wht_i'\]\D{%H:%M:%S} \['$reset'\]'$f_blk'\]'$b_blk'\][\w] $(prompt_text)\['$reset'\]'
+PS2='\['$f_wht_i'\]\D{%H:%M:%S} \['$reset'\]\['$f_blk'\]\['$b_blk'\][\w] $(prompt_text)\['$reset'\]'
 # Prompt for 'select' command
 #PS3=
 # Prompt for execution traces (default '+' sign)
@@ -154,16 +154,23 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 # colored man pages
+# mb - Start blinking
+# md - Start bold mode
+# me - End all mode like so, us, mb, md and mr
+# so - Start standout mode
+# se - End standout mode
+# us - Start underlining
+# ue - End underlining
 man() {
     env \
-        LESS_TERMCAP_mb=$(printf "\e[1;31m") \
-        LESS_TERMCAP_md=$(printf "\e[1;31m") \
-        LESS_TERMCAP_me=$(printf "\e[0m") \
-        LESS_TERMCAP_se=$(printf "\e[0m") \
+        LESS_TERMCAP_mb=$(printf "$f_red") \
+        LESS_TERMCAP_md=$(printf "$f_cyn_b") \
+        LESS_TERMCAP_us=$(printf "$f_grn_i") \
         LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
-        LESS_TERMCAP_ue=$(printf "\e[0m") \
-        LESS_TERMCAP_us=$(printf "\e[1;32m") \
-            man "$@"
+        LESS_TERMCAP_me=$(printf "$reset") \
+        LESS_TERMCAP_se=$(printf "$reset") \
+        LESS_TERMCAP_ue=$(printf "$reset") \
+        man "$@"
 }
 
 # Set up path
