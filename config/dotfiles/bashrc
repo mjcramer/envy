@@ -166,7 +166,7 @@ man() {
         LESS_TERMCAP_mb=$(printf "$f_red") \
         LESS_TERMCAP_md=$(printf "$f_cyn_b") \
         LESS_TERMCAP_us=$(printf "$f_grn_i") \
-        LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+        LESS_TERMCAP_so=$(printf "$b_red$f_ylw") \
         LESS_TERMCAP_me=$(printf "$reset") \
         LESS_TERMCAP_se=$(printf "$reset") \
         LESS_TERMCAP_ue=$(printf "$reset") \

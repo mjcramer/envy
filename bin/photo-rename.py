@@ -26,49 +26,25 @@ def find_number(filename):
   # print(base, digit, extension)
 
 def collect_files(args): 
-  pass
-
-def rename_files(args):
-
-    if not os.path.isdir(args.folder):
-        print('Folder (%s) does not exist' % args.folder)
-        return
-
-    # os.chdir(args.folder)
-
-    (path, dirs, files) = next(os.walk(args.folder))
-    if args.debug:
-      print("Walking path: {} {} {}".format(path, dirs, files)) 
-
-    regex = re.compile(args.match, re.DEBUG if args.debug else 0)
-    if args.debug:
-      print("There are {:d} capture groups in this pattern: {}".format(regex.groups, args.match))
-    
-    source_files = list(map(lambda f: "{}/{}".format(path, f), filter(regex.match, files)))
-    if args.debug:
-      print("Found {} matching source files".format(str(len(source_files))))
-
-    number = args.number
-    padding = args.zero_padding if args.zero_padding else int(math.log10(len(source_files) + args.number)) + 1
-    regex = re.compile('(.*?)0*(\d+)\.(\w+)', re.DEBUG if args.debug else 0)
-
-    for source_file in source_files:
-      d = os.path.dirname(source_file)
-      f = os.path.basename(source_file)
-      # First check if it has an index number at the end
-      m = regex.match(f)
-      if not m:
-        print("Not matched file {}".format(f))
+  for folder in args.folders:
+    if not os.path.isdir(folder):
+        print('Input folder {} does not exist, skipping...'.format(folder))
         continue
+    for (path, dirs, files) in os.walk(folder):
       if args.debug:
-        print("Match groups: {}".format(m.groups()))
-      ext = m.group(args.extension_field).lower()
-      target_file = ("{0}{1}{2:0" + str(padding) + "d}.{3}").format(args.replace, args.separator, number, ext)
-      if args.debug or args.test:
-        print("Replacing source file {} with {}".format(f, target_file))
-      if not args.test:
-        os.rename(source_file, target_file)
-      number += 1
+        print("Walking path: {} {} {}".format(path, dirs, files)) 
+      for file in files:
+        if args.debug:
+          print("Adding input file: {}/{}".format(path, file))
+        yield "{}/{}".format(path, file)
+
+
+def match_path(regex, base, order, ext, full_path):
+  m = regex.match(full_path)
+  if m:
+    return [ full_path, m.group(base), m.group(order), m.group(ext) ]
+  else:
+    return None
 
 
 def main():
@@ -78,15 +54,15 @@ def main():
                                      File name extensions are both preserved and required.''',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter, )
     # Required Args
-    parser.add_argument('folder', help='the folder to search through')
+    parser.add_argument('folders', metavar='folders', type=str, nargs='+', help='the folders to search through')
 
     parser.set_defaults(mode="ordered")
-    subparsers = parser.add_subparsers()
-    ordered_parser = subparsers.add_parser('--ordered', help='This mode preserves the filesystem sorted ordering when renaming files.')
-    ordered_parser.add_argument('-c', '--count', action='store', help='Set the count.')
-
-    regex_parser = subparsers.add_parser('--something', help='This mode preserves the filesystem sorted ordering when renaming files.')
-    regex_parser.add_argument('-f', '--fart', action='store_true', help="Cuts the cheese")
+    # subparsers = parser.add_subparsers()
+  #   ordered_parser = subparsers.add_parser('--ordered', help='This mode preserves the filesystem sorted ordering when renaming files.')
+  #   ordered_parser.add_argument('-c', '--count', action='store', help='Set the count.')
+  #
+  #   regex_parser = subparsers.add_parser('--something', help='This mode preserves the filesystem sorted ordering when renaming files.')
+  #   regex_parser.add_argument('-f', '--fart', action='store_true', help="Cuts the cheese")
 
     # Optional Args
     parser.add_argument('-D', '--debug', action='store_true', help='Display verbose debugging information about files and pattern matches.')
@@ -104,19 +80,46 @@ def main():
     parser.add_argument('-t', '--test', action='store_true', help='Test run, does not actually rename the files, just prints out what files would be renamed.')
     # parser.add_argument('-r', '--regex', action='store_true', default=False, help='The pattern is a regex')
     # parser.add_argument('-v', '--view', action='store_true', default=False, help='Only view the potential changes, does not rename files')
+    
+    parser.add_argument('-d', '--directory', type=str, default='.', help="The directory to which to write the output files.")
 
     args = parser.parse_args()
     if args.debug:
       print(args)
     
-    if args.folder:
-        if not os.access(args.folder, os.W_OK):
-            print("Folder {} is not writeable.".format(args.folder))
-            parser.exit(1)
+    if not os.access(args.directory, os.W_OK):
+      print("Directory {} is not writeable.".format(args.directory))
+      parser.exit(1)
 
     if args.debug:
       print("Mode is {}".format(args.mode))
-    rename_files(args)
+
+
+    regex = re.compile(args.match, re.DEBUG if args.debug else 0)
+    if args.debug:
+      print("There are {:d} capture groups in this pattern: {}".format(regex.groups, args.match))
+
+    input_files = collect_files(args)
+
+    source_files = map(lambda x: match_path(regex, args.basename_field, args.order_field, args.extension_field, x), input_files)
+    filtered_files = filter(None.__ne__, source_files)
+    number = args.number
+    # padding = args.zero_padding if args.zero_padding else int(math.log10(len(source_files) + args.number)) + 1
+    padding = args.zero_padding if args.zero_padding else 2
+    for path, base, order, extension in filtered_files:
+      d = os.path.dirname(path)
+      f = os.path.basename(path)
+      # First check if it has an index number at the end
+      # ext = m.group(args.extension_field).lower()
+      print("dir, file, ext: {}, {}, {}".format(base, order, extension))
+      
+      target_file = ("{0}{1}{2:0" + str(padding) + "d}.{3}").format(args.replace, args.separator, number, extension)
+      if args.debug or args.test:
+        print("Replacing source file {} with {}".format(f, target_file))
+      if not args.test:
+        os.rename(path, target_file)
+      number += 1
+
     parser.exit()
 
 
