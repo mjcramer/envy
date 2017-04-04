@@ -85,11 +85,24 @@ CDPATH="."
 # Define a variable containing a path and you will be able to cd into it regardless of the directory you're in
 shopt -s cdable_vars
 
-# Examples:
-# export dotfiles="$HOME/dotfiles"
-# export projects="$HOME/projects"
-# export documents="$HOME/Documents"
-# export dropbox="$HOME/Dropbox"
+# Source .env files upon entering a directory
+function source_env {
+  if [ -f "$PWD/.env" ]; then
+    source $PWD/.env
+  fi
+}
+
+function cd { 
+  builtin cd "$@" && source_env
+}
+
+function pushd { 
+  builtin pushd "$@" && source_env
+}
+
+function popd { 
+  builtin popd "$@" && source_env
+}
 
 # This function returns a string intended to be used in the prompt label. It reflects the status of the current directory if it's a git managed directory. 
 function prompt_text {
