@@ -40,6 +40,17 @@ shift $(($OPTIND - 1))
 #homebrew/completions/pip-completion
 #homebrew/completions/brew-cask-completion
 
+function install_brew {
+  brew=$(which brew) # witch brew?
+  if [ -z "$brew" ]; then
+  	echo "Installing brew..."
+  	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  else
+  	echo "Brew already installed..."
+  fi
+}
+
+
 function check_file {
 	echo "Checking file $1"
 	if [[ $excludes =~ $file ]]; then

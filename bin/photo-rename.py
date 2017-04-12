@@ -39,11 +39,17 @@ def collect_files(args):
         yield "{}/{}".format(path, file)
 
 
-def match_path(regex, base, order, ext, full_path):
-  m = regex.match(full_path)
+def match_path(full_path, regex, base, order, ext):
+  d = os.path.dirname(full_path)
+  f = os.path.basename(full_path)
+  print("{} {}: {} {} {} {}".format(d, f, regex, base, order, ext))
+  
+  m = regex.match(f)
   if m:
+    print("blah")
     return [ full_path, m.group(base), m.group(order), m.group(ext) ]
   else:
+    print("map to none")
     return None
 
 
@@ -101,14 +107,15 @@ def main():
 
     input_files = collect_files(args)
 
-    source_files = map(lambda x: match_path(regex, args.basename_field, args.order_field, args.extension_field, x), input_files)
-    filtered_files = filter(None.__ne__, source_files)
+    source_files = list(map(lambda x: match_path(x, regex, args.basename_field, args.order_field, args.extension_field), input_files))
+    print("{} source files".format(len(source_files)))
+    filtered_files = list(filter(None.__ne__, source_files))
+    print("{} filtered files".format(len(filtered_files)))
+    
     number = args.number
     # padding = args.zero_padding if args.zero_padding else int(math.log10(len(source_files) + args.number)) + 1
     padding = args.zero_padding if args.zero_padding else 2
     for path, base, order, extension in filtered_files:
-      d = os.path.dirname(path)
-      f = os.path.basename(path)
       # First check if it has an index number at the end
       # ext = m.group(args.extension_field).lower()
       print("dir, file, ext: {}, {}, {}".format(base, order, extension))
