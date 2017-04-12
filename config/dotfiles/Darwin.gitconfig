@@ -1,6 +1,6 @@
 [user]
 	name = Michael Cramer
-	email = cramer@imgur.com
+	email = michael@cramer.name 
 
 [push]
 	default = current 
@@ -14,7 +14,7 @@
 [core]
 	editor = vim 
 	autocrlf = input
-	excludesfile = /Users/michael.cramer/.gitignore_global
+	excludesfile = /Users/cramer/.gitignore_global
 
 [diff]
 	tool = bcomp
@@ -48,3 +48,4 @@
 	poh = push origin HEAD
 	puh = pull origin HEAD
 	set-upstream = !git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`
+
