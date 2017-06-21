@@ -1,6 +1,6 @@
 [user]
 	name = Michael Cramer
-	email = michael@cramer.name 
+	useConfigOnly = true
 
 [push]
 	default = current 
