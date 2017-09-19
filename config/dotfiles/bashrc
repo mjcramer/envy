@@ -233,6 +233,11 @@ if [ -n "$(which aws)" ]; then
 	export AWS_SECRET_ACCESS_KEY="$(aws configure get aws_secret_access_key)"
 fi
 
+if [ -e /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk ]; then
+	source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc
+	source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc
+fi
+
 if [ -f ~/.credentials ]; then
   source ~/.credentials
 fi

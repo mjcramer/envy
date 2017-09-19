@@ -30,9 +30,9 @@ shift $(($OPTIND - 1))
 
 
 read -r -d '' brew_packages <<-'EOF'
+bash
 htop 
 vim 
-bash4
 bash-completion 
 tree 
 wget 
@@ -159,5 +159,5 @@ function install_packages {
 	esac
 }
 
-# link_dotfiles $source 
+link_dotfiles $source 
 install_packages 
