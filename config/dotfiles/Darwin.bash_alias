@@ -47,6 +47,7 @@ case $(uname -s) in
 	    alias nowdate='date +"%d-%m-%Y"'
 	    alias listening='lsof -Pn -i4TCP -sTCP:LISTEN'
       alias vi=/usr/local/bin/vim
+	  alias killvideo='sudo killall VDCAssistant'
 #	alias ipt='sudo /sbin/iptables'
 #	alias iptlist='sudo /sbin/iptables -L -n -v --line-numbers'
 #	alias iptlistin='sudo /sbin/iptables -L INPUT -n -v --line-numbers'
