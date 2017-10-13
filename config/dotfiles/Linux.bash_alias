@@ -23,6 +23,7 @@ alias svi='sudo vi'
 alias ping='ping -c 5'
 alias pingfast='ping -c 100 -s.2'
 
+if which exa >/dev/null  
 case $(uname -s) in
     Linux)
 	    alias ls='ls -F --color=auto'
