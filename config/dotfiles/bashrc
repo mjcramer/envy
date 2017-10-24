@@ -81,24 +81,18 @@ shopt -s cdspell 2> /dev/null
 # Ex: CDPATH=".:~:~/projects" will look for targets in the current working directory, in home and in the ~/projects folder
 CDPATH="."
 
-# This allows you to bookmark your favorite places across the file system
-# Define a variable containing a path and you will be able to cd into it regardless of the directory you're in
-shopt -s cdable_vars
-
 ##
 ## PROMPT AND TITLE APPEARANCE
 ##
 
 # This function returns a string intended to be used in the prompt label. It reflects the status of the current directory if it's a git managed directory. 
-function prompt_text {
+function dir_status {
+	status=""
     local git=$(which git)
     if [ -n "$git" ]; then
-        status=$(git status --porcelain -b 2> /dev/null | awk '{ if ($1 == "##") { if (gsub(/\.\.\..*/,"",$2)) up = "^"; branch = $2 }; if ($1 ~ "[MDA]") mod = "*"  } END { printf "%s%s%s", branch, mod, up }')
-        if [ -n "$status" ]; then
-            echo "($status) "
-            return
-        fi
-    fi
+		status="$($git status --porcelain -b 2> /dev/null | awk '{ if ($1 == "##") { if (gsub(/\.\.\..*/,"",$2)) up = " origin"; branch = $2 }; if ($1 ~ "[MDA]") mod = " modified"  } END { printf "git: %s%s%s", branch, mod, up }')"
+	fi
+	echo $status
 }
 
 # Returns a string intended for the shell title. Either the value of the TITLE variable or the current directory.
@@ -111,7 +105,7 @@ function title_text {
 }
 
 # Automatically trim long paths in the prompt (requires Bash 4.x)
-export PROMPT_DIRTRIM=2
+export PROMPT_DIRTRIM=4
 
 # Set the title and command prompts
 case $TERM in
@@ -130,12 +124,12 @@ else
   echo "Cannot find ~/.ansi_colors"
 fi
 
-# echo -e "testing \033[38;5;196;48;5;21mCOLOR1\033[38;5;208;48;5;159mCOLOR2\033[m"
-
 # Primary prompt
-PS1='\['$f_wht_i'\]\D{%H:%M:%S} \['$reset'\]\['$f_mag_b'\][\w]\['$reset'\] \['$f_grn_b'\]$(prompt_text)\['$reset'\]'
+PS1='| \['$f_ylw_i'\]\D{%H:%M:%S}\['$reset'\] | \['$f_mag_b'\]cwd: \w\['$reset'\] | \['$f_grn_b'\]$(dir_status)\['$reset'\] |\n'$blink'> '$reset
+#PS1='| \['$f_ylw_i'\]\D{%H:%M:%S}\['$reset'\] | \['$f_mag_b'\]cwd: \w\['$reset'\] | \['$f_grn_b'\]$(dir_status)\['$reset'\] |\n> '
 # Prompt for incomplete input (like when you forget closing quotes)
-PS2='\['$f_wht_i'\]\D{%H:%M:%S} \['$reset'\]\['$f_blk'\]\['$b_blk'\][\w] $(prompt_text)\['$reset'\]'
+PS2=$blink'| '$reset
+#PS2='| '
 # Prompt for 'select' command
 #PS3=
 # Prompt for execution traces (default '+' sign)

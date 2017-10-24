@@ -1,5 +1,5 @@
 
-reset='\033[00m'
+reset='\[\033[00m\]'
 
 # Foreground
 f_blk='\033[0;30m' # Black - Regular
@@ -44,3 +44,6 @@ b_blu='\033[44m'   # Blue
 b_pur='\033[45m'   # Purple
 b_cyn='\033[46m'   # Cyan
 b_wht='\033[47m'   # White
+
+# Miscellaneous
+blink='\[\033[5m\]'
