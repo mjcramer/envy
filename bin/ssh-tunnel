@@ -1,0 +1,47 @@
+#!/bin/bash
+
+script_dir=$(cd $(dirname $0); pwd -P)
+
+if [ -n "$TUNNEL_IP" ]; then
+	ip=$TUNNEL_IP
+fi
+if [ -n "$TUNNEL_PORTS" ]; then
+	ports=$TUNNEL_PORTS
+fi
+if [ -n "$TUNNEL_USER" ]; then
+	user=$TUNNEL_USER
+fi
+
+while getopts ":i:p:u:" opt; do 
+  case $opt in
+    i)
+      ip=$OPTARG
+	    ;;
+    p)
+      ports=$OPTARG
+      ;;
+    u)
+      user=$OPTARG
+      ;;
+    \?)
+      echo "Invalid option: -$opt" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$opt requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+shift $(($OPTIND - 1))
+
+
+port_mapping=
+for port in $ports; do
+	port_mapping="$port_mapping -L $port:127.0.0.1:$port"
+done
+
+echo "Creating an ssh tunnel for kinetica on port $port to $ip..." 
+echo ssh -nNT$port_mapping $user@$ip
+ssh -nNT$port_mapping $user@$ip
+

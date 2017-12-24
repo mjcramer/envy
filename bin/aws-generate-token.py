@@ -18,4 +18,4 @@ token = sts.get_session_token(duration = 3600, force_new = True, mfa_serial_numb
 
 print 'export AWS_ACCESS_KEY_ID='     + token.access_key
 print 'export AWS_SECRET_ACCESS_KEY=' + token.secret_key
-print 'export AWS_SESSION_TOKEN='     + token.session_token
+print 'export AWS_SECURITY_TOKEN='     + token.session_token

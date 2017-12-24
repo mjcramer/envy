@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+
+this_dir=$(cd $(dirname $0); pwd -P)
+source=$this_dir/config
+link="ln -svf"
+arch=$(uname -s)
+host=
+excludes="$0 README.md bin applescript samples"
+exec=
+link_only=false
+
+while getopts ":tb:l" opt; do
+    case $opt in
+    t)
+        exec=echo
+        ;;
+	l)
+		link_only=true
+		;;
+    b)
+        value=$OPTARG
+        ;;
+    \?)
+        echo "Invalid option: -$opt" >&2
+        exit 1
+        ;;
+    :)
+        echo "Option -$opt requires an argument." >&2
+        exit 1
+        ;;
+    esac
+done
+shift $(($OPTIND - 1))
+
+
+read -r -d '' brew_packages <<-'EOF'
+bash
+htop 
+vim 
+tree 
+wget 
+curl 
+git 
+jq
+nmap
+iftop
+ansible
+packer 
+terraform 
+consul 
+awscli
+Caskroom/cask/google-cloud-sdk
+bash-completion 
+docker-completion
+packer-completion
+vagrant-completion
+pip-completion
+brew-cask-completion
+EOF
+
+read -r -d '' pip_packages <<-'EOF'
+pandas
+numpy
+pyproj
+shapely
+ansible
+EOF
+
+# function install_brew {
+#   brew=$(which brew) # witch brew?
+#   if [ -z "$brew" ]; then
+#     echo "Installing brew..."
+#     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+#   else
+#     echo "Brew already installed..."
+#   fi
+# }
+
+function install_packages {
+  echo "================================================================================"
+  echo "Installing packages... "
+	case $arch in
+		Darwin)
+      for package in $brew_packages; do
+        $exec brew install $package
+      done
+			;;
+	esac
+}
+
+
+# function check_file {
+#   echo "Checking file $1"
+#   if [[ $excludes =~ $file ]]; then
+#     echo "Excluding $base/$file."
+#   else
+#     if [ -d "$base/$file" ]; then
+#       link_dotfiles $1 $path
+#     elif [ -f "$base/$file" ]; then
+#       echo $link $base/$file ~/.$path
+#     else
+#       echo "Cannot find $base/$file."
+#     fi
+#   fi
+# }
+
+# function scan_files {
+#   echo "================================================================================"
+#   echo "--- scan_files $@ ---"
+#   echo "--------------------------------------------------------------------------------"
+#
+#   local base=$1
+#   if [ -n "$2" ]; then
+#     local pred="-name \"$type.*\""
+#   else
+#     local tag=""
+#   fi
+#
+#   echo "Scanning directory $base ... $tag"
+#   for file in $(find $base -maxdepth 1 -type f $pred -exec basename {} ';'); do
+#     echo "$HOME/.$file --> $base/$file"
+#   done
+# }
+
+function scan_dir {
+  local base=$1
+  if [ ! -d $base ]; then
+    echo "$base directory does not exist, skipping..."
+    return
+  fi
+  declare -A dotfiles
+
+	echo "--------------------------------------------------------------------------------"
+  echo "-- Scanning directory $base"
+
+  for file in $(find $base -mindepth 1 -maxdepth 1 -type f -not -name "*.*" -exec basename {} ';'); do
+    dotfiles[$HOME/.$file]=$base/$file
+  done
+
+  for type in $arch $host; do
+    for file in $(find $base -mindepth 1 -maxdepth 1 -type f -name "$type.*" -exec basename {} ';'); do
+      dotfiles[$HOME/${file#$type*}]=$base/$file
+    done
+  done
+  
+  for dotfile in "${!dotfiles[@]}"; do 
+    $exec $link ${dotfiles[$dotfile]} $dotfile
+  done
+    
+	echo "--------------------------------------------------------------------------------"
+	echo "--- Done with $base."
+  echo
+}
+
+function link_dotfiles {
+  echo "================================================================================"
+	echo "--- Linking dotfiles in $1"
+
+  local base=$1/dotfiles
+  
+  scan_dir $base
+}
+
+link_dotfiles $source 
+if [ "$link_only" == false ]; then
+	install_packages 
+fi
