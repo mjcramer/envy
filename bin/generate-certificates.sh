@@ -3,20 +3,20 @@
 country="US"
 state="CA"
 locality="San Francisco"
-organization="Michael Cramer"
+organization="Aris Vlasakakis"
 unit="de"
-host="michael.cramer.name"
-email="michael@cramer.name"
+host="aris.vlasakakis.com"
+email="aris@vlasakakis.com"
 
 csr="${host}.csr"
 key="${host}.key"
 cert="${host}.cert"
 
-openssl genrsa -des3 -out michael.cramer.name.key -passout "pass:password" 1024
+openssl genrsa -des3 -out aris.vlasakakis.com.key -passout "pass:password" 1024
 
-openssl req -new -key michael.cramer.name.key -passin "pass:password" -out michael.cramer.name.csr -subj "/C=US/ST=CA/L=San Francisco/O=brainframe/CN=michael.cramer.name"
+openssl req -new -key aris.vlasakakis.com.key -passin "pass:password" -out aris.vlasakakis.com.csr -subj "/C=US/ST=CA/L=San Francisco/O=brainframe/CN=aris.vlasakakis.com"
 
-mv michael.cramer.name.key michael.cramer.name.key.orig
-openssl rsa -in michael.cramer.name.key.orig -passin "pass:password" -out michael.cramer.name.key
+mv aris.vlasakakis.com.key aris.vlasakakis.com.key.orig
+openssl rsa -in aris.vlasakakis.com.key.orig -passin "pass:password" -out aris.vlasakakis.com.key
 
-openssl x509 -req -days 365 -in michael.cramer.name.csr -signkey michael.cramer.name.key -out michael.cramer.name.crt
+openssl x509 -req -days 365 -in aris.vlasakakis.com.csr -signkey aris.vlasakakis.com.key -out aris.vlasakakis.com.crt
