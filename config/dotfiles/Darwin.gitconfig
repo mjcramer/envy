@@ -12,35 +12,24 @@
 	ui = true
 
 [core]
-	editor = vim 
+	editor = emacs
 	autocrlf = input
-	;excludesfile = /Users/michael.cramer/.gitignore_global
 
 [diff]
-	;tool = bcomp
 	tool = vimdiff
 
 [difftool]
 	prompt = false
 
 [merge]
-	;tool = bcomp
 	tool = vimdiff 
 
-[difftool "bcomp"]
-    trustExitCode = true
-    cmd = "/usr/local/bin/bcomp" "$LOCAL" "$REMOTE"
-
 [merge]
-	;tool = bcomp
 	tool = vimdiff
 
 [mergetool]
     prompt = false
 
-[mergetool "bcomp"]
-    trustExitCode = true
-    cmd = "/usr/local/bin/bcomp" "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
 
 [alias]
 	unstage = reset HEAD
@@ -48,3 +37,4 @@
 	poh = push origin HEAD
 	puh = pull origin HEAD
 	set-upstream = !git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`
+

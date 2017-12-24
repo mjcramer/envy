@@ -9,6 +9,7 @@ alias .2='cd ../..'
 alias .3='cd ../../..'
 alias .4='cd ../../../..'
 alias .5='cd ../../../../..'
+alias less='less -r'
 alias mkdir='mkdir -pv'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
@@ -18,36 +19,50 @@ alias h='history'
 alias j='jobs -l'
 alias path='echo -e ${PATH//:/\\n}'
 alias svi='sudo vi'
-#alias vis='vim "+set si"'
 alias ping='ping -c 5'
 alias pingfast='ping -c 100 -s.2'
+# <<<<<<< HEAD:bash_alias		
 
-case $(uname -s) in
-    Linux)
-	alias rm='rm -I'
-	alias ls='ls -F --color=auto'
-        alias ll='ls -lF --color=auto'
-        alias lla='ls -alF --color=auto'
-        alias la='ls -aF --color=auto'
-        alias l='ls -CF --color=auto'
-	    alias l.='ls -d --color=auto .*'
-	    alias listening='netstat -tlpn'        
-        alias vi=vim
-	;;
+# case $(uname -s) in
+#     Linux)
+# 	alias rm='rm -I'
+# 	alias ls='ls -F --color=auto'
+#         alias ll='ls -lF --color=auto'
+#         alias lla='ls -alF --color=auto'
+#         alias la='ls -aF --color=auto'
+#         alias l='ls -CF --color=auto'
+# 	    alias l.='ls -d --color=auto .*'
+# 	    alias listening='netstat -tlpn'        
+#         alias vi=vim
+# 	;;
 
-    Darwin)
-	alias rm='rm -i'
-	alias ls='ls -FG'
-        alias ll='ls -lFG'
-        alias lla='ls -alFG'
-        alias la='ls -aFG'
-        alias l='ls -CFG'
-	    alias l.='ls -dG .*'
-	    alias now='date +"%T'
-	    alias nowtime=now
-	    alias nowdate='date +"%d-%m-%Y"'
-	    alias listening='lsof -Pn -i4TCP -sTCP:LISTEN'
-        alias vi=/usr/local/bin/vim
+#     Darwin)
+# 	alias rm='rm -i'
+# 	alias ls='ls -FG'
+#         alias ll='ls -lFG'
+#         alias lla='ls -alFG'
+#         alias la='ls -aFG'
+#         alias l='ls -CFG'
+# 	    alias l.='ls -dG .*'
+# 	    alias now='date +"%T'
+# 	    alias nowtime=now
+# 	    alias nowdate='date +"%d-%m-%Y"'
+# 	    alias listening='lsof -Pn -i4TCP -sTCP:LISTEN'
+#         alias vi=/usr/local/bin/vim
+
+which exa >/dev/null && alias ls='exa -G'
+which exa >/dev/null && alias ll='exa -l --git'
+which exa >/dev/null && alias l='exa -1'
+which exa >/dev/null && alias lsa='exa -aG'
+which exa >/dev/null && alias lla='exa -al --git'
+which exa >/dev/null && alias l.='exa -dG .*'
+alias now='date +"%T"'
+alias nowtime=now
+alias nowdate='date +"%d-%m-%Y"'
+alias listening='lsof -Pn -i4TCP -sTCP:LISTEN'
+alias vi=/usr/local/bin/vim
+alias killvideo='sudo killall VDCAssistant'
+
 #	alias ipt='sudo /sbin/iptables'
 #	alias iptlist='sudo /sbin/iptables -L -n -v --line-numbers'
 #	alias iptlistin='sudo /sbin/iptables -L INPUT -n -v --line-numbers'
@@ -63,8 +78,6 @@ case $(uname -s) in
 #	alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
 #	alias cpuinfo='lscpu'
 #	alias gpumeminfo='grep -i --color memory /var/log/Xorg.0.log'
-	;;
-esac
 
 alias vbm='VBoxManage'
 alias pyjson='python -m json.tool'
