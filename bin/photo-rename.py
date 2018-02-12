@@ -36,7 +36,10 @@ class PhotoFileName:
     else:
       total_count += 1
       self.number = total_count
-    
+
+  def __lt__(self, other):
+    return self.base < other.base
+
   def __to_str():
     print("PhotoFileName: path={} base={} ext={} order={}".format(
       self.path, self.base, self.extension, self.number if self.number else "NONE"
@@ -49,7 +52,7 @@ class PhotoFileName:
   # print(base, digit, extension)
 
 def collect_files(folders):
-  base_extension_regex = re.compile("(.*)\.(\w*)", re.DEBUG if DEBUG else 0)
+  base_extension_regex = re.compile("(.+)\.(\w*)", re.DEBUG if DEBUG else 0)
   for folder in folders:
     if not os.path.isdir(folder):
         print('Input folder {} does not exist, skipping...'.format(folder))
@@ -130,8 +133,8 @@ def main():
       print("There are {:d} capture groups in this pattern: {}".format(regex.groups, args.match))
 
     if regex.groups == 0:
-      base_group = 0
-      number_group = 0
+      print("You must specify at least one match group (base name) in a specified match pattern!")
+      parser.exit(3)
     elif regex.groups == 1:
       if args.basename_field == 1:
         base_group = 1
@@ -141,7 +144,7 @@ def main():
         number_group = 1
       else:
         print("You must set group 1 field!")
-        sys.exit(2)
+        parser.exit(2)
     elif regex.groups == 2:
       if args.basename_field == 1:
         base_group = 1
@@ -151,7 +154,7 @@ def main():
         number_group = 1
       else:
         print("You must set group 1 field!")
-        sys.exit(2)
+        parser.exit(2)
       
     else:
       print("Too many match groups in pattern: {}".format(regex.groups))
@@ -180,12 +183,14 @@ def main():
     filtered_files = list(filter(None.__ne__, source_files))
     if DEBUG:
       print("{} filtered files".format(len(filtered_files)))
-    
+   
+    filtered_files.sort()
+
     number = args.number
     padding = args.zero_padding if args.zero_padding else int(math.log10(len(filtered_files) + args.number)) + 1
     for name in filtered_files:
       # First check if it has an index number at the end
-      target_file = ("{0}{1}{2:0" + str(padding) + "d}.{3}").format(args.replace, args.separator, name.number, name.extension.lower())
+      target_file = ("{0}{1}{2:0" + str(padding) + "d}.{3}").format(args.replace, args.separator, number, name.extension.lower())
       if args.debug or args.test:
         print("Replacing source file {} with {}".format(name.path, target_file))
       if not args.test:

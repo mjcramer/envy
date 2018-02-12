@@ -1,0 +1,19 @@
+Host control
+	IdentityFile ~/.ssh/google_compute_engine
+	HostName 35.197.53.234 
+	
+Host configuration-1
+	IdentityFile ~/.ssh/google_compute_engine
+	ProxyCommand ssh -i ~/.ssh/google_compute_engine 35.197.53.234 -W %h:%p
+	HostName 10.20.40.4 
+
+Host configuration-2
+	IdentityFile ~/.ssh/google_compute_engine
+	ProxyCommand ssh -i ~/.ssh/google_compute_engine 35.197.53.234 -W %h:%p
+	HostName 10.20.40.2 
+
+Host configuration-3
+	IdentityFile ~/.ssh/google_compute_engine
+	ProxyCommand ssh -i ~/.ssh/google_compute_engine 35.197.53.234 -W %h:%p
+	HostName 10.20.40.3 
+
