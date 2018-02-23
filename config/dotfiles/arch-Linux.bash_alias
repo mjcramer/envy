@@ -23,46 +23,46 @@ alias svi='sudo vi'
 alias ping='ping -c 5'
 alias pingfast='ping -c 100 -s.2'
 
-if which exa >/dev/null  
+#if which exa >/dev/null  
 case $(uname -s) in
     Linux)
-	    alias ls='ls -F --color=auto'
+	alias ls='ls -F --color=auto'
         alias ll='ls -lF --color=auto'
         alias lla='ls -alF --color=auto'
         alias la='ls -aF --color=auto'
         alias l='ls -CF --color=auto'
-	    alias l.='ls -d --color=auto .*'
-	    alias listening='netstat -tlpn'        
+	alias l.='ls -d --color=auto .*'
+	alias listening='netstat -tlpn'        
         alias vi=vim
 	;;
 
     Darwin)
-	    alias ls='ls -FG'
+	alias ls='ls -FG'
         alias ll='ls -lFG'
         alias lla='ls -alFG'
         alias la='ls -aFG'
         alias l='ls -CFG'
-	    alias l.='ls -dG .*'
-	    alias now='date +"%T"'
-	    alias nowtime=now
-	    alias nowdate='date +"%d-%m-%Y"'
-	    alias listening='lsof -Pn -i4TCP -sTCP:LISTEN'
-      alias vi=/usr/local/bin/vim
-#	alias ipt='sudo /sbin/iptables'
-#	alias iptlist='sudo /sbin/iptables -L -n -v --line-numbers'
-#	alias iptlistin='sudo /sbin/iptables -L INPUT -n -v --line-numbers'
-#	alias iptlistout='sudo /sbin/iptables -L OUTPUT -n -v --line-numbers'
-#	alias iptlistfw='sudo /sbin/iptables -L FORWORD -n -v --line-numbers'
-#	alias header='curl -I'
-#	alias headerc='curl -I --compress'
-#	alias root='sudo -i'
-#	alias meminfo='free -m -l -t'
-#	alias psmem='ps auxf | sort -nr -k 4'
-#	alias psmem10='ps auxf | sort -nr -k 4 | head -10'
-#	alias pscpu='ps auxf | sort -nr -k 3'
-#	alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
-#	alias cpuinfo='lscpu'
-#	alias gpumeminfo='grep -i --color memory /var/log/Xorg.0.log'
+	alias l.='ls -dG .*'
+	alias now='date +"%T"'
+	alias nowtime=now
+	alias nowdate='date +"%d-%m-%Y"'
+	alias listening='lsof -Pn -i4TCP -sTCP:LISTEN'
+	alias vi=/usr/local/bin/vim
+	#	alias ipt='sudo /sbin/iptables'
+	#	alias iptlist='sudo /sbin/iptables -L -n -v --line-numbers'
+	#	alias iptlistin='sudo /sbin/iptables -L INPUT -n -v --line-numbers'
+	#	alias iptlistout='sudo /sbin/iptables -L OUTPUT -n -v --line-numbers'
+	#	alias iptlistfw='sudo /sbin/iptables -L FORWORD -n -v --line-numbers'
+	#	alias header='curl -I'
+	#	alias headerc='curl -I --compress'
+	#	alias root='sudo -i'
+	#	alias meminfo='free -m -l -t'
+	#	alias psmem='ps auxf | sort -nr -k 4'
+	#	alias psmem10='ps auxf | sort -nr -k 4 | head -10'
+	#	alias pscpu='ps auxf | sort -nr -k 3'
+	#	alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
+	#	alias cpuinfo='lscpu'
+	#	alias gpumeminfo='grep -i --color memory /var/log/Xorg.0.log'
 	;;
 esac
 
