@@ -14,9 +14,9 @@ while getopts ":tb:l" opt; do
     t)
         exec=echo
         ;;
-	l)
-		link_only=true
-		;;
+    l)
+      link_only=true
+      ;;
     b)
         value=$OPTARG
         ;;
@@ -32,10 +32,10 @@ while getopts ":tb:l" opt; do
 done
 shift $(($OPTIND - 1))
 
-
 read -r -d '' brew_packages <<-'EOF'
 bash
 htop 
+tmux
 vim 
 tree 
 wget 
@@ -64,28 +64,28 @@ numpy
 pyproj
 shapely
 ansible
+powerline-status
 EOF
 
-# function install_brew {
-#   brew=$(which brew) # witch brew?
-#   if [ -z "$brew" ]; then
-#     echo "Installing brew..."
-#     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-#   else
-#     echo "Brew already installed..."
-#   fi
-# }
+function install_brew {
+  brew=$(which brew) # witch brew?
+  if [ -z "$brew" ]; then
+    echo "Installing brew..."
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  else
+    echo "Brew already installed..."
+  fi
+}
 
 function install_packages {
   echo "================================================================================"
   echo "Installing packages... "
-	case $arch in
-		Darwin)
-      for package in $brew_packages; do
-        $exec brew install $package
-      done
-			;;
-	esac
+  echo "--------------------------------------------------------------------------------"
+  case $arch in
+    Darwin)
+      $exec brew install $brew_packages
+      ;;
+  esac
 }
 
 
@@ -133,35 +133,34 @@ function scan_dir {
 	echo "--------------------------------------------------------------------------------"
   echo "-- Scanning directory $base"
 
-  for file in $(find $base -mindepth 1 -maxdepth 1 -type f -not -name "*.*" -exec basename {} ';'); do
+  for file in $(find $base -mindepth 1 -maxdepth 1 -type f -not -name "arch-*" -exec basename {} ';'); do
     dotfiles[$HOME/.$file]=$base/$file
   done
 
   for type in $arch $host; do
-    for file in $(find $base -mindepth 1 -maxdepth 1 -type f -name "$type.*" -exec basename {} ';'); do
-      dotfiles[$HOME/${file#$type*}]=$base/$file
+    for file in $(find $base -mindepth 1 -maxdepth 1 -type f -name "arch-$type.*" -exec basename {} ';'); do
+      dotfiles[$HOME/${file#arch-$type*}]=$base/$file
     done
   done
   
-  for dotfile in "${!dotfiles[@]}"; do 
+  for dotfile in "${!dotfiles[@]}"; do
     $exec $link ${dotfiles[$dotfile]} $dotfile
   done
     
-	echo "--------------------------------------------------------------------------------"
-	echo "--- Done with $base."
+  echo "--------------------------------------------------------------------------------"
+  echo "--- Done with $base."
   echo
 }
 
 function link_dotfiles {
   echo "================================================================================"
-	echo "--- Linking dotfiles in $1"
+  echo "--- Linking dotfiles in $1"
 
   local base=$1/dotfiles
-  
   scan_dir $base
 }
 
 link_dotfiles $source 
 if [ "$link_only" == false ]; then
-	install_packages 
+  install_packages 
 fi

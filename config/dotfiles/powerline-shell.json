@@ -1,0 +1,13 @@
+{
+  "segments": [
+	"time",
+    "ssh", 
+    "cwd", 
+    "git", 
+    "hg", 
+    "root",
+	"newline",
+	"exit_code",
+	"set_term_title"
+  ]
+}

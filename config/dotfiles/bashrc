@@ -81,60 +81,6 @@ shopt -s cdspell 2> /dev/null
 # Ex: CDPATH=".:~:~/projects" will look for targets in the current working directory, in home and in the ~/projects folder
 CDPATH="."
 
-##
-## PROMPT AND TITLE APPEARANCE
-##
-
-# This function returns a string intended to be used in the prompt label. It reflects the status of the current directory if it's a git managed directory. 
-function dir_status {
-	status=""
-    local git=$(which git)
-    if [ -n "$git" ]; then
-		status="$($git status --porcelain -b 2> /dev/null | awk '{ if ($1 == "##") { if (gsub(/\.\.\..*/,"",$2)) up = " origin"; branch = $2 }; if ($1 ~ "[MDA]") mod = " modified"  } END { printf "git: %s%s%s", branch, mod, up }')"
-	fi
-	echo $status
-}
-
-# Returns a string intended for the shell title. Either the value of the TITLE variable or the current directory.
-function title_text {
-    if [ -n "$TITLE" ]; then
-        echo $TITLE
-    else 
-        echo $(basename $PWD)
-    fi
-}
-
-# Automatically trim long paths in the prompt (requires Bash 4.x)
-export PROMPT_DIRTRIM=4
-
-# Set the title and command prompts
-case $TERM in
-    screen)
-        export PROMPT_COMMAND='echo -ne "\033k$(title_text)\033\\"'
-        ;;
-    *)
-        hostname=`hostname -s`
-        export PROMPT_COMMAND='echo -ne "\033]0;[${hostname:0:7}] $(title_text)\007"'
-        ;;
-esac
-
-if [ -f ~/.ansi_colors ]; then
-  source ~/.ansi_colors
-else
-  echo "Cannot find ~/.ansi_colors"
-fi
-
-# Primary prompt
-PS1='| \['$f_ylw_i'\]\D{%H:%M:%S}\['$reset'\] | \['$f_mag_b'\]cwd: \w\['$reset'\] | \['$f_grn_b'\]$(dir_status)\['$reset'\] |\n'$blink'> '$reset
-#PS1='| \['$f_ylw_i'\]\D{%H:%M:%S}\['$reset'\] | \['$f_mag_b'\]cwd: \w\['$reset'\] | \['$f_grn_b'\]$(dir_status)\['$reset'\] |\n> '
-# Prompt for incomplete input (like when you forget closing quotes)
-PS2=$blink'| '$reset
-#PS2='| '
-# Prompt for 'select' command
-#PS3=
-# Prompt for execution traces (default '+' sign)
-#PS4=
-
 # Make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
@@ -144,26 +90,6 @@ PS2=$blink'| '$reset
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
-
-# colored man pages
-# mb - Start blinking
-# md - Start bold mode
-# me - End all mode like so, us, mb, md and mr
-# so - Start standout mode
-# se - End standout mode
-# us - Start underlining
-# ue - End underlining
-man() {
-    env \
-        LESS_TERMCAP_mb=$(printf "$f_red") \
-        LESS_TERMCAP_md=$(printf "$f_cyn_b") \
-        LESS_TERMCAP_us=$(printf "$f_grn_i") \
-        LESS_TERMCAP_so=$(printf "$b_red$f_ylw") \
-        LESS_TERMCAP_me=$(printf "$reset") \
-        LESS_TERMCAP_se=$(printf "$reset") \
-        LESS_TERMCAP_ue=$(printf "$reset") \
-        man "$@"
-}
 
 # Set up path
 export PATH=/usr/bin:/usr/sbin:/bin:/sbin:$PATH	
@@ -216,6 +142,20 @@ if [ -e /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk ]; then
 	source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc
 	source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc
 fi
+
+# Set powerline
+if [ -d ~/Library/Python/2.7/bin ]; then
+  export PATH=$PATH:~/Library/Python/2.7/bin
+fi
+powerline_path=$(python -c 'import pkgutil; print pkgutil.get_loader("powerline").filename' 2>/dev/null)
+if [ -n "$powerline_path" ]; then
+  powerline-daemon -q
+  POWERLINE_BASH_CONTINUATION=1
+  POWERLINE_BASH_SELECT=1
+  source ${powerline_path}/bindings/bash/powerline.sh
+fi
+
+# Enable python pip scripts
 
 if [ -f ~/.credentials ]; then
   source ~/.credentials

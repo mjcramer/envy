@@ -19,8 +19,6 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 " git functionality
 Plugin 'tpope/vim-fugitive'
-" status line
-Plugin 'bling/vim-airline'
 " display buffer on status line
 Bundle 'bling/vim-bufferline'
 " file opening tool 
@@ -33,14 +31,11 @@ Plugin 'scrooloose/nerdcommenter'
 "Plugin 'Valloric/YouCompleteMe'
 " vagrant support
 Plugin 'markcornick/vim-vagrant'
-" salt support 
-Plugin 'saltstack/salt-vim'
 " gradle support
 Plugin 'tfnico/vim-gradle'
 " scala support
 Plugin 'derekwyatt/vim-scala'
-" php coloring
-Plugin 'vim-scripts/cleanphp'
+Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 " all of your Plugins must be added before the following line
 call vundle#end() " required
@@ -114,20 +109,6 @@ set splitbelow
 " open new splits to the right of current
 set splitright
 
-" airline configuration
-""""""""""""""""""""""""""""""
-" enable powerline fonts (requires font installation and setting the prompt in
-" terminal profile!)
-let g:airline_powerline_fonts = 1 
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-let g:airline_theme             = 'dark'
-
-" Enable the list of buffers
-let g:airline#extensions#tabline#enabled = 1
-" Show just the filename
-let g:airline#extensions#tabline#fnamemod = ':.'
 
 " nerdtree configuration
 """"""""""""""""""""""""""""""""""""""""
@@ -163,3 +144,15 @@ nmap <Leader>w :wall<CR>
 nmap <Leader>p :set paste
 let pastestate=0
 nnoremap <Leader>p :if (pastestate == 0) \| set paste \| else \| set paste! \| endif \| let pastestate=1-pastestate<CR>
+
+set guifont=Inconsolata\ for\ Powerline:h15
+let g:Powerline_symbols = 'fancy'
+set encoding=utf-8
+set t_Co=256
+set fillchars+=stl:\ ,stlnc:\
+set term=xterm-256color
+set termencoding=utf-8
+
+set rtp+=~/Library/Python/2.7/lib/python/site-packages/powerline/bindings/vim/
+set laststatus=2
+set t_Co=256
