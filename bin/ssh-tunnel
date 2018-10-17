@@ -41,7 +41,7 @@ for port in $ports; do
 	port_mapping="$port_mapping -L $port:127.0.0.1:$port"
 done
 
-echo "Creating an ssh tunnel for kinetica on port $port to $ip..." 
+echo "Creating an ssh tunnel on port $port to $ip..." 
 echo ssh -nNT$port_mapping $user@$ip
 ssh -nNT$port_mapping $user@$ip
 

@@ -8,6 +8,7 @@ host=
 excludes="$0 README.md bin applescript samples"
 exec=
 link_only=false
+email="michael@cramer.name"
 
 while getopts ":tb:l" opt; do
     case $opt in
@@ -159,6 +160,32 @@ function link_dotfiles {
   local base=$1/dotfiles
   scan_dir $base
 }
+
+function config_misc {
+  case $arch in
+    Darwin)
+	# First, read in the user headers, in case there's something already there...
+	user_headers=$(defaults read com.apple.mail UserHeaders)
+	if [ $user_headers -eq $email ]; then
+		echo "Reply-To address already set to $email."
+	else
+		echo "Setting Reply-To address to $email."
+		defaults write com.apple.mail UserHeaders '{"Reply-To" = "'$email'";}'
+	fi
+	echo "Setting Finder to show full path in title."
+	defaults write com.apple.finder _FXShowPosixPathInTitle -bool true; killall Finder
+      ;;
+  esac
+}
+
+vim_runtime=~/.vim_runtime
+if [ -d "$vim_runtime" ]; then
+    echo "Vim runtime already exists at $vim_runtime."
+else
+    echo "Installing Vim runtime to $vim_runtime."
+    git clone --depth=1 https://github.com/amix/vimrc.git $vim_runtime
+    sh $vim_runtime/install_awesome_vimrc.sh
+fi
 
 link_dotfiles $source 
 if [ "$link_only" == false ]; then

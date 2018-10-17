@@ -26,3 +26,25 @@ function popd {
 function cdf {
   cd $(dirname $(find . -name $1))
 }
+
+function git-pull-request {
+	if [ -z "$1" ]; then 
+		echo "Please specify the PR number: "
+		read pr_number
+	else
+		pr_number=$1
+	fi
+	git fetch origin pull/$pr_number/head:PR-$pr_number
+	git checkout PR-$pr_number
+}
+
+function killjob {
+	kill -9 $(jobs -p $1)
+}
+
+function sbt-test {
+	sbt test | \
+		tail -1 | \
+		sed 's/^.*Total time: \(.*\), completed \(.*\)/Total time:: \1, completed \2/' | \
+		say --progress --interactive 
+}
