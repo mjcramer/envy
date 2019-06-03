@@ -65,6 +65,8 @@ numpy
 pyproj
 shapely
 ansible
+pycrypto
+apache-libcloud
 powerline-status
 EOF
 
