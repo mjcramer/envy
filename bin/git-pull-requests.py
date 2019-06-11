@@ -1,209 +1,60 @@
 #!/usr/bin/env python3
 
-"""git pull-request
-
-Automatically check out github pull requests into their own branch.
-
-Usage:
-
-    git pull-request <OPTIONS> [<pull request number>]
-
-Options:
-
-    -h, --help
-        Display this message and exit
-
-    -r <repo>, --repo <repo>
-        Use this github repo instead of the 'remote origin' or 'github.repo'
-        git config settings. Needs to be in "user/repository" form
-
-Copyright (C) 2011 by Andreas Gohr <andi@splitbrain.org>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-"""
-import sys
-import getopt
-import json
-import urllib.request, urllib.error, urllib.parse
+import argparse
 import os
 import re
-import shlex
+from github import Github
+from termcolor import colored
+import datetime 
+import fnmatch
 
-def main():
-    repo, remote = '', None
+pull_wait_red=5
+pull_wait_yellow=2
+pull_indent=5
 
-    # parse command line options
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], "hr:", ["help","repo:"])
-    except getopt.error as msg:
-        print(msg)
-        print("for help use --help")
-        sys.exit(2)
-    # process options
-    for o, a in opts:
-        if o in ("-h", "--help"):
-            print(__doc__)
-            sys.exit(0)
-        if o in ("-r", "--repo"):
-            if re.search('/', a):
-              repo = a
-            else:
-              remote = a
+def list_pull_requests(github, org_name, glob):
+    regex = re.compile("{0}/{1}".format(org_name, fnmatch.translate(glob)))
+    repos = list(filter(lambda r: regex.match(getattr(r, 'full_name')), github.get_organization(org_name).get_repos('all')))
 
-    if remote is None and repo == '':
-        remote = 'origin'
+    current = datetime.datetime.utcnow()
+    for repo in repos:
+        pulls = repo.get_pulls(state='open', sort='long-running')
+        if pulls.totalCount > 0:
+            print(colored("Open pull requests for", 'white'), 
+                colored(repo.full_name, 'cyan', attrs=['bold','underline']))
+            for pull in pulls:
+                delta = current - pull.updated_at
+                units = 'days' if delta.days > 1 else 'day' if delta.days > 0 else 'hours'
+                color = 'red' if delta.days > pull_wait_red else 'yellow' if delta.days > pull_wait_yellow else 'white'
+                number = delta.days if delta.days > 0 else round(delta.seconds / 3600)
+                print("{0:>{1}}:".format(pull.number, pull_indent),
+                    colored(pull.title, 'white', attrs=['bold']),
+                    colored("created on {0}".format(pull.created_at.strftime("%b %d, %Y")), 'blue', attrs=['bold']))
+                print((pull_indent+1)*' ', 
+                    colored(pull.html_url, 'white', attrs=['dark']),
+                    colored("(waiting for {0} {1})".format(number, units), color))
+            print(' ')
+            
+if __name__ == '__main__':
+    # setup_logging()
+    parser = argparse.ArgumentParser(__file__, __doc__,
+                                     description="This absolutely incredible python script will change your life!",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter, )
+    # Boolean flag example
+    parser.add_argument('--verbose', action='store_true', help='Add more descriptive output.')
+    parser.add_argument('--debug', action='store_true', help='Enable debugging output.')
+    parser.add_argument('--token', help='Access token to allow api calls to github.')
+    parser.add_argument('--org', default='norwegian-cruise-line', help='The name of the github organization.')
+    parser.add_argument('project', nargs='?', default="zero-*", help='Project repository glob by which to filter.')
+    args = parser.parse_args()
+   
+    global DEBUG
+    DEBUG = args.debug
 
-    # get repo name from git config:
-    if(repo == ''):
-        repo = os.popen('git config github.repo').read().strip()
-
-    # get repo name from origin
-    if(repo == '' or remote != None):
-        escaped = shlex.quote(remote)
-        origin = os.popen("git config remote.%s.url" % escaped).read()
-        origin = re.sub("(\.git)?\s*$", "", origin)
-        m = re.search(r"\bgithub\.com[:/]([^/]+/[^/]+)$", origin)
-        if(m != None):
-            repo = m.group(1)
-
-    if(repo == ''):
-        print(color_text("Failed to determine github repository name",'red',True))
-        print("The repository is usually automatically detected from your remote origin.")
-        print("If your origin doesn't point to github, you can specify the repository on")
-        print("the command line using the -r parameter, by specifying either a remote or")
-        print("the full repository name (user/repo), or configure it using")
-        print("git config github.repo <user>/<repository>")
-        sys.exit(1)
-
-    # process arguments
-    if len(args):
-        ret = fetch(repo, args[0])
+    token = args.token if args.token else os.getenv('GITHUB_ACCESS_TOKEN')
+    if token:
+        list_pull_requests(Github(token), args.org, args.project)
     else:
-        ret = show(repo)
+        print(colored("You must specify a github access token either via the --token option or the GITHUB_ACCESS_TOKEN environment variable.", 'red'))
 
-    sys.exit(ret)
-
-"""Nicely display info about a given pull request
-"""
-def display(pr):
-    print("%s - %s" % (color_text('REQUEST %s' % pr.get('number'),'green'),pr.get('title')))
-    print("    %s" % (color_text(pr['head']['label'],'yellow')))
-    print("    by %s %s" % (pr['user'].get('login'), color_text(pr.get('created_at')[:10],'red')))
-    print("    %s" % (color_text(pr.get('html_url'),'blue')))
-    print()
-
-"""List open pull requests
-
-Queries the github API for open pull requests in the current repo
-"""
-def show(repo):
-
-    print("loading open pull requests for %s..." % (repo))
-    print()
-    url = "https://api.github.com/repos/%s/pulls" % (repo)
-    req = urllib.request.Request(url)
-    try:
-      response = urllib.request.urlopen(req)
-    except urllib.error.HTTPError as msg:
-      print("error loading pull requests for repo %s: %s" % (repo, msg))
-      exit(1)
-
-    data = response.read().decode("UTF-8")
-    if (data == ''):
-        print("failed to speak with github.")
-        return 3
-
-    data = json.loads(data)
-    #print json.dumps(data,sort_keys=True, indent=4)
-
-    for pr in data:
-        display(pr)
-    return 0
-
-
-def fetch(repo, pullreq):
-
-    print("loading pull request info for request %s..." % (pullreq))
-    print()
-    url = "https://api.github.com/repos/%s/pulls/%s" % (repo, pullreq)
-    req = urllib.request.Request(url)
-    response = urllib.request.urlopen(req)
-    data = response.read().decode("UTF-8")
-    if (data == ''):
-        print("failed to speak with github.")
-        return 3
-
-    data = json.loads(data)
-    pr = data
-    if pr['head']['repo'] == None:
-      print("remote repository for this pull request "
-            "does not exist anymore.")
-      return 6
-    display(pr)
-
-    local  = shlex.quote('pull-request-%s' % (pullreq))
-    branch = os.popen("git branch|grep '^*'|awk '{print $2}'").read().strip();
-    if(branch != pr['base']['ref'] and branch != local):
-        print(color_text("The pull request is based on branch '%s' but you're on '%s' currently" % \
-            (pr['base']['ref'], branch),'red',True))
-        return 4
-
-    ret = os.system('git branch %s' % (local));
-    ret = os.system('git checkout %s' % (local));
-    if(ret != 0):
-        print("Failed to create/switch branch")
-        return 5
-
-    print("pulling from %s (%s)" % (pr['head']['repo']['git_url'], pr['head']['ref']));
-
-    git_url = shlex.quote(pr['head']['repo']['git_url'])
-    ref = shlex.quote(pr['head']['ref'])
-    ret = os.system('git pull %s %s' % (git_url, ref));
-
-    print()
-    print(color_text("done. examine changes and merge into master if good",'green'));
-
-    return 0
-
-
-"""Return the given text in ANSI colors
-
-From http://travelingfrontiers.wordpress.com/2010/08/22/how-to-add-colors-to-linux-command-line-output/
-"""
-def color_text(text, color_name, bold=False):
-    colors = (
-        'black', 'red', 'green', 'yellow',
-        'blue', 'magenta', 'cyan', 'white'
-    )
-
-    if not sys.stdout.isatty():
-        return text
-
-    if color_name in colors:
-        return '\033[{0};{1}m{2}\033[0m'.format(
-            int(bold),
-            colors.index(color_name) + 30,
-            text)
-    else:
-        return text
-
-if __name__ == "__main__":
-    main()
-
-
+    parser.exit()
