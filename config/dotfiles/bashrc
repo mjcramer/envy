@@ -155,14 +155,9 @@ if [ -n "$powerline_path" ]; then
   source ${powerline_path}/bindings/bash/powerline.sh
 fi
 
-# Enable python pip scripts
-
-if [ -f ~/.credentials ]; then
-  source ~/.credentials
-fi
+# Enable travis stuff 
+[ -f /Users/cramer/.travis/travis.sh ] && source /Users/cramer/.travis/travis.sh
 
 # Local env 
-if [ -e ~/.bash_local ]; then
-	. ~/.bash_local
-fi
+[ -f ~/.bash_local ] && source ~/.bash_local
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 import argparse
-
+from os.path import basename
 
 
 def main():
-    parser = argparse.ArgumentParser(__file__, __doc__,
+    parser = argparse.ArgumentParser(basename(__file__), __doc__,
                                      description="This absolutely incredible python script will change your life!",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter, )
     # Boolean flag example
