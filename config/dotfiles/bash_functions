@@ -4,6 +4,10 @@ if [ "$BASH_SOURCE" = "$0" ]; then
     exit 1
 fi
 
+function title {
+    echo -ne "\033]0;"$*"\007"
+}
+
 # Source .env files upon entering a directory
 function source_env {
   if [ -f "$PWD/.env" ]; then
@@ -13,6 +17,7 @@ function source_env {
 
 function cd { 
   builtin cd "$@" && source_env
+  [ -d $PWD/.git ] && title $(basename $PWD) || true
 }
 
 function pushd { 
