@@ -50,6 +50,7 @@ packer
 terraform 
 consul 
 awscli
+circleci
 Caskroom/cask/google-cloud-sdk
 bash-completion 
 docker-completion
@@ -68,6 +69,10 @@ ansible
 pycrypto
 apache-libcloud
 powerline-status
+semantic_version
+gitpython
+pygithub
+termcolor
 EOF
 
 function install_brew {

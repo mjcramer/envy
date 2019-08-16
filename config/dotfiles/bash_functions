@@ -11,14 +11,14 @@ function title {
 # Source .env files upon entering a directory
 function source_env {
   if [ -f "$PWD/.env" ]; then
-    source $PWD/.env
+    source "$PWD/.env"
   fi
 }
 
-function cd { 
-  builtin cd "$@" && source_env
-  [ -d $PWD/.git ] && title $(basename $PWD) || true
-}
+#function cd { 
+#  builtin cd "$@" && source_env
+#  [ -d "$PWD/.git" ] && title $(basename $PWD) || true
+#}
 
 function pushd { 
   builtin pushd "$@" && source_env

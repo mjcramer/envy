@@ -4,7 +4,12 @@ import argparse
 from os.path import basename
 
 
-def main():
+def main(args):
+    if args.param:
+        print("Hello {}!".format(args.param))
+
+   
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(basename(__file__), __doc__,
                                      description="This absolutely incredible python script will change your life!",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter, )
@@ -33,15 +38,10 @@ def main():
     # parser.add_argument('--nometa',
     #                     action='store_true',
     #                     help='with --list, exclude hostvars')
+ 
     args = parser.parse_args()
-
     global DEBUG
     DEBUG = args.debug
 
-    if args.param:
-        print("Hello {}!".format(args.param))
-
+    main(args)
     parser.exit()
-
-if __name__ == '__main__':
-    main()
