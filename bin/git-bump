@@ -60,7 +60,8 @@ def main(args):
     new_tag = repo.create_tag(new_version, message=f"Version bumped to {new_version}")
     if args.push:
       try:
-        repo.remote().push(new_tag, "--tags")
+        repo.remote().push(new_tag)
+        
       except ValueError:
         sys.stderr.write(f"Cannot find remote, will not push.\n")
 
