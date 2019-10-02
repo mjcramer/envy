@@ -185,6 +185,12 @@ function config_misc {
   esac
 }
 
+function config_powerline {
+    pip3 install powerline-status
+
+}
+
+
 vim_runtime=~/.vim_runtime
 if [ -d "$vim_runtime" ]; then
     echo "Vim runtime already exists at $vim_runtime."

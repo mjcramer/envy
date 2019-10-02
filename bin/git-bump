@@ -19,6 +19,9 @@ def do_minor(version):
 def do_patch(version):
   return version.next_patch()
   
+def do_tag(version): 
+  return version
+
 def is_git_repo(path):
   try:
     _ = git.Repo(path).git_dir
@@ -52,12 +55,11 @@ def main(args):
     return
 
   repo = git.Repo(args.path)
-  print(repo.remote)
   versions = list(sorted(filter(lambda version: version is not None, map(tag_to_semver, repo.tags))))
   print(f"The last tag was {str(versions[-1])}.")
   new_version = args.type(versions[-1])
   if ask_yes_no(f"Bump version to {new_version}?"):
-    new_tag = repo.create_tag(new_version, message=f"Version bumped to {new_version}")
+    new_tag = repo.create_tag(new_version, force=True, message=f"Version bumped to {new_version}")
     if args.push:
       try:
         repo.remote().push(new_tag)
@@ -80,6 +82,7 @@ if __name__ == '__main__':
   group.add_argument('-m', '--major', action='store_const', const=do_major, dest='type', help="Bump the major part of the version.")
   group.add_argument('-n', '--minor', action='store_const', const=do_minor, dest='type', help="Bump the minor part of the version.")
   group.add_argument('-p', '--patch', action='store_const', const=do_patch, dest='type', help="Bump the patch part of the version.")
+  group.add_argument('-t', '--tag', action='store_const', const=do_tag, dest='type', help="Reset the latest tag to the current commit.")
   parser.set_defaults(type=do_patch)
 
   args = parser.parse_args()

@@ -1,7 +1,7 @@
 [user]
 	name = Michael Cramer
 	useConfigOnly = true
-	email = michael@cramer.name 
+	email = michael@cramer.name
 
 [push]
 	default = current 
@@ -50,3 +50,8 @@
 	puh = pull origin HEAD
 	set-upstream = !git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`
 
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
