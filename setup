@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 this_dir=$(cd $(dirname $0); pwd -P)
-source=$this_dir/config
+source=$this_dir/dotfiles
 link="ln -svf"
 arch=$(uname -s)
 host=
@@ -35,6 +35,7 @@ shift $(($OPTIND - 1))
 
 read -r -d '' brew_packages <<-'EOF'
 bash
+python3
 htop 
 tmux
 vim 
@@ -45,7 +46,6 @@ git
 jq
 nmap
 iftop
-ansible
 packer 
 terraform 
 consul 
@@ -58,21 +58,6 @@ packer-completion
 vagrant-completion
 pip-completion
 brew-cask-completion
-EOF
-
-read -r -d '' pip_packages <<-'EOF'
-pandas
-numpy
-pyproj
-shapely
-ansible
-pycrypto
-apache-libcloud
-powerline-status
-semantic_version
-gitpython
-pygithub
-termcolor
 EOF
 
 function install_brew {
@@ -96,6 +81,16 @@ function install_packages {
   esac
 }
 
+function install_modules {
+  echo ""
+  echo "================================================================================"
+  echo " Installing Python modules"
+  echo "--------------------------------------------------------------------------------"
+  echo "|                                                                              |"
+
+  pip3 install -r $this_dir/python/requirements.txt
+
+}
 
 # function check_file {
 #   echo "Checking file $1"
@@ -130,6 +125,23 @@ function install_packages {
 #   done
 # }
 
+function handle_dotfile_directory {
+  local base=$1
+  local dir=$(basename $base)
+  if [ ! -d $base ]; then
+    echo "$base directory does not exist, skipping..."
+    return
+  fi
+
+  pushd $base 1>/dev/null
+  for file in $(find * -type f); do
+    $exec mkdir -p $(dirname $HOME/.$dir/$file)
+    $exec $link $base/$file $HOME/.$dir/$file
+  done
+  popd 1>/dev/null
+}
+
+
 function scan_dir {
   local base=$1
   if [ ! -d $base ]; then
@@ -139,7 +151,7 @@ function scan_dir {
   declare -A dotfiles
 
 	echo "--------------------------------------------------------------------------------"
-  echo "-- Scanning directory $base"
+  echo "--- Scanning directory $base"
 
   for file in $(find $base -mindepth 1 -maxdepth 1 -type f -not -name "arch-*" -exec basename {} ';'); do
     dotfiles[$HOME/.$file]=$base/$file
@@ -155,6 +167,11 @@ function scan_dir {
     $exec $link ${dotfiles[$dotfile]} $dotfile
   done
     
+  for dir in $(find $base -mindepth 1 -maxdepth 1 -type d); do
+    handle_dotfile_directory $dir
+  done
+
+
   echo "--------------------------------------------------------------------------------"
   echo "--- Done with $base."
   echo
@@ -164,8 +181,7 @@ function link_dotfiles {
   echo "================================================================================"
   echo "--- Linking dotfiles in $1"
 
-  local base=$1/dotfiles
-  scan_dir $base
+  scan_dir $1
 }
 
 function config_misc {
@@ -186,21 +202,32 @@ function config_misc {
 }
 
 function config_powerline {
-    pip3 install powerline-status
+    # pip3 install powerline-status 
+    powerline_location=$(pip3 show powerline-status | sed -E -n 's/^Location: (.+)/\1/p')
 
 }
 
-
-vim_runtime=~/.vim_runtime
-if [ -d "$vim_runtime" ]; then
-    echo "Vim runtime already exists at $vim_runtime."
-else
-    echo "Installing Vim runtime to $vim_runtime."
-    git clone --depth=1 https://github.com/amix/vimrc.git $vim_runtime
-    sh $vim_runtime/install_awesome_vimrc.sh
-fi
+echo "################################################################################"
+echo " ENVironment deploYment "
+echo "================================================================================"
+echo "^                                                                              ^"
 
 link_dotfiles $source 
 if [ "$link_only" == false ]; then
   install_packages 
+  install_modules 
 fi
+
+echo "################################################################################"
+echo
+
+
+
+
+# if [ -d "$vim_runtime" ]; then
+#     echo "Vim runtime already exists at $vim_runtime."
+# else
+#     echo "Installing Vim runtime to $vim_runtime."
+#     git clone --depth=1 https://github.com/amix/vimrc.git $vim_runtime
+#     sh $vim_runtime/install_awesome_vimrc.sh
+# fi

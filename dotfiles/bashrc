@@ -147,12 +147,13 @@ fi
 if [ -d ~/Library/Python/2.7/bin ]; then
   export PATH=$PATH:~/Library/Python/2.7/bin
 fi
-powerline_path=$(python -c 'import pkgutil; print pkgutil.get_loader("powerline").filename' 2>/dev/null)
+#powerline_path=$(python -c 'import pkgutil; print pkgutil.get_loader("powerline").filename' 2>/dev/null)
+powerline_path=$(pip3 show powerline-status | sed -E -n 's/^Location: (.+)/\1/p')
 if [ -n "$powerline_path" ]; then
   powerline-daemon -q
   POWERLINE_BASH_CONTINUATION=1
   POWERLINE_BASH_SELECT=1
-  source ${powerline_path}/bindings/bash/powerline.sh
+  source ${powerline_path}/powerline/bindings/bash/powerline.sh
 fi
 
 # Set window title 

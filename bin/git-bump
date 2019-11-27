@@ -56,8 +56,12 @@ def main(args):
 
   repo = git.Repo(args.path)
   versions = list(sorted(filter(lambda version: version is not None, map(tag_to_semver, repo.tags))))
-  print(f"The last tag was {str(versions[-1])}.")
-  new_version = args.type(versions[-1])
+  if len(versions) == 0: 
+    print(f"No tags currently exist.")
+    new_version = semantic_version.Version("0.1.0")
+  else:
+    print(f"The last tag was {str(versions[-1])}.")
+    new_version = args.type(versions[-1])
   if ask_yes_no(f"Bump version to {new_version}?"):
     new_tag = repo.create_tag(new_version, force=True, message=f"Version bumped to {new_version}")
     if args.push:
