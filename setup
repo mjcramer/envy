@@ -5,7 +5,6 @@ source=$this_dir/dotfiles
 link="ln -svf"
 arch=$(uname -s)
 host=
-excludes="$0 README.md bin applescript samples"
 exec=
 link_only=false
 email="michael@cramer.name"
@@ -70,9 +69,9 @@ function install_brew {
   fi
 }
 
-function install_packages {
+function install_brew_packages {
   echo "================================================================================"
-  echo "Installing packages... "
+  echo "Installing brew packages... "
   echo "--------------------------------------------------------------------------------"
   case $arch in
     Darwin)
@@ -91,39 +90,6 @@ function install_modules {
   pip3 install -r $this_dir/python/requirements.txt
 
 }
-
-# function check_file {
-#   echo "Checking file $1"
-#   if [[ $excludes =~ $file ]]; then
-#     echo "Excluding $base/$file."
-#   else
-#     if [ -d "$base/$file" ]; then
-#       link_dotfiles $1 $path
-#     elif [ -f "$base/$file" ]; then
-#       echo $link $base/$file ~/.$path
-#     else
-#       echo "Cannot find $base/$file."
-#     fi
-#   fi
-# }
-
-# function scan_files {
-#   echo "================================================================================"
-#   echo "--- scan_files $@ ---"
-#   echo "--------------------------------------------------------------------------------"
-#
-#   local base=$1
-#   if [ -n "$2" ]; then
-#     local pred="-name \"$type.*\""
-#   else
-#     local tag=""
-#   fi
-#
-#   echo "Scanning directory $base ... $tag"
-#   for file in $(find $base -maxdepth 1 -type f $pred -exec basename {} ';'); do
-#     echo "$HOME/.$file --> $base/$file"
-#   done
-# }
 
 function handle_dotfile_directory {
   local base=$1
@@ -214,8 +180,9 @@ echo "^                                                                         
 
 link_dotfiles $source 
 if [ "$link_only" == false ]; then
-  install_packages 
-  install_modules 
+  install_brew
+  install_brew_packages 
+  install_python_modules 
 fi
 
 echo "################################################################################"
