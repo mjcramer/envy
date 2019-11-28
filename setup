@@ -32,55 +32,22 @@ while getopts ":tb:l" opt; do
 done
 shift $(($OPTIND - 1))
 
-read -r -d '' brew_packages <<-'EOF'
-bash
-python3
-htop 
-tmux
-vim 
-tree 
-wget 
-curl 
-git 
-jq
-nmap
-iftop
-packer 
-terraform 
-consul 
-awscli
-circleci
-Caskroom/cask/google-cloud-sdk
-bash-completion 
-docker-completion
-packer-completion
-vagrant-completion
-pip-completion
-brew-cask-completion
-EOF
-
-function install_brew {
-  brew=$(which brew) # witch brew?
-  if [ -z "$brew" ]; then
-    echo "Installing brew..."
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  else
-    echo "Brew already installed..."
-  fi
-}
 
 function install_brew_packages {
   echo "================================================================================"
   echo "Installing brew packages... "
   echo "--------------------------------------------------------------------------------"
-  case $arch in
-    Darwin)
-      $exec brew install $brew_packages
-      ;;
-  esac
+  brew=$(which brew) # witch brew?
+  if [ -z "$brew" ]; then
+    echo "First, installing brew..."
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  else
+    echo "Good, brew is installed..."
+  fi
+  $brew bundle 
 }
 
-function install_modules {
+function install_python_modules {
   echo ""
   echo "================================================================================"
   echo " Installing Python modules"
@@ -88,7 +55,6 @@ function install_modules {
   echo "|                                                                              |"
 
   pip3 install -r $this_dir/python/requirements.txt
-
 }
 
 function handle_dotfile_directory {
@@ -107,8 +73,7 @@ function handle_dotfile_directory {
   popd 1>/dev/null
 }
 
-
-function scan_dir {
+function link_dotfiles {
   local base=$1
   if [ ! -d $base ]; then
     echo "$base directory does not exist, skipping..."
@@ -116,8 +81,8 @@ function scan_dir {
   fi
   declare -A dotfiles
 
-	echo "--------------------------------------------------------------------------------"
-  echo "--- Scanning directory $base"
+  echo "================================================================================"
+  echo "--- Linking dotfiles in $1"
 
   for file in $(find $base -mindepth 1 -maxdepth 1 -type f -not -name "arch-*" -exec basename {} ';'); do
     dotfiles[$HOME/.$file]=$base/$file
@@ -141,13 +106,6 @@ function scan_dir {
   echo "--------------------------------------------------------------------------------"
   echo "--- Done with $base."
   echo
-}
-
-function link_dotfiles {
-  echo "================================================================================"
-  echo "--- Linking dotfiles in $1"
-
-  scan_dir $1
 }
 
 function config_misc {
@@ -180,7 +138,6 @@ echo "^                                                                         
 
 link_dotfiles $source 
 if [ "$link_only" == false ]; then
-  install_brew
   install_brew_packages 
   install_python_modules 
 fi
