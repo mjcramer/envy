@@ -1,0 +1,5 @@
+#!/bin/bash
+
+num=${1:-1}
+git diff-tree --no-commit-id --name-status -r $(git log --max-count=1 --skip=$(($num-1)) --pretty=format:"%h")
+

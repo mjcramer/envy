@@ -1,13 +1,4 @@
-
-pandas
-numpy
-pyproj
-shapely
-ansible
 pycrypto
-apache-libcloud
 powerline-status
-semantic_version
-gitpython
-pygithub
 termcolor
+virtualenv

@@ -8,6 +8,7 @@ powerline-setup
 
 
 #set -g fish_user_paths "/usr/local/sbin" "/usr/local/bin" $fish_user_paths
+#set -g fish_user_paths "/usr/local/opt/gettext/bin" $fish_user_paths
 
 
 # OLD BASH STUFF TO CONVERT
@@ -279,4 +280,5 @@ powerline-setup
 
 # alias vbm='VBoxManage'
 # alias pyjson='python -m json.tool'
+
 
