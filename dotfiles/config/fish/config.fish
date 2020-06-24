@@ -1,11 +1,18 @@
 
+if status --is-interactive
+	# Set up powerline prompts for much sexy command line!
+	set VIRTUAL_ENV_DISABLE_PROMPT true
+	set powerline_root (pip3 show powerline-status | sed -E -n 's/^Location: (.+)/\1/p')
+	set fish_function_path $fish_function_path "$powerline_root/powerline/bindings/fish"
+	powerline-setup
+end
 
-# Set up powerline prompts for much sexy command line!
-set VIRTUAL_ENV_DISABLE_PROMPT true
-set powerline_root (pip3 show powerline-status | sed -E -n 's/^Location: (.+)/\1/p')
-set fish_function_path $fish_function_path "$powerline_root/powerline/bindings/fish"
-powerline-setup
-
+# Set up fisher for installing fish packages
+if not functions -q fisher
+    set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
+    curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
+    fish -c fisher
+end
 
 #set -g fish_user_paths "/usr/local/sbin" "/usr/local/bin" $fish_user_paths
 #set -g fish_user_paths "/usr/local/opt/gettext/bin" $fish_user_paths

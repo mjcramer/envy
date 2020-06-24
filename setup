@@ -8,17 +8,28 @@ host=
 exec=
 link_only=false
 email="michael@cramer.name"
+setup_brew=false
+setup_python=false
+setup_dotfiles=false
 
-while getopts ":tb:l" opt; do
+while getopts ":tabpl" opt; do
     case $opt in
     t)
         exec=echo
         ;;
+	a)
+		setup_brew=true
+		setup_dotfiles=true
+		setup_python=true
+		;;
     l)
-      link_only=true
-      ;;
+		setup_dotfiles=true
+		;;
     b)
-        value=$OPTARG
+		setup_brew=true
+        ;;
+    p)
+		setup_python=true
         ;;
     \?)
         echo "Invalid option: -$opt" >&2
@@ -33,10 +44,21 @@ done
 shift $(($OPTIND - 1))
 
 
+# Print section heading
+heading() {
+    char=${2:-=}
+    echo
+    printf "${char}%.0s" $(seq -3 ${#1})
+    echo
+    echo "| $1 |"
+    printf "${char}%.0s" $(seq -3 ${#1})
+    echo 
+	echo
+}
+
 function install_brew_packages {
-  echo "================================================================================"
-  echo "Installing brew packages... "
-  echo "--------------------------------------------------------------------------------"
+  heading "Installing brew packages... "
+  
   brew=$(which brew) # witch brew?
   if [ -z "$brew" ]; then
     echo "First, installing brew..."
@@ -48,12 +70,8 @@ function install_brew_packages {
 }
 
 function install_python_modules {
-  echo ""
-  echo "================================================================================"
-  echo " Installing Python modules"
-  echo "--------------------------------------------------------------------------------"
-  echo "|                                                                              |"
-
+  heading "Installing python modules..."
+  
   pip3 install -r $this_dir/python/requirements.txt
 }
 
@@ -131,24 +149,30 @@ function config_powerline {
 
 }
 
+function main {
+	heading "ENVironment deploYment" "#"
 
+	# brew
+	if [ "$setup_brew" == true ]; then
+		install_brew_packages 
+	fi
 
-echo "################################################################################"
-echo " ENVironment deploYment "
-echo "================================================================================"
-echo "^                                                                              ^"
+	# python
+	if [ "$setup_python" == true ]; then
+		install_python_modules 
+	fi
 
-link_dotfiles $source 
-if [ "$link_only" == false ]; then
-  install_brew_packages 
-  install_python_modules 
-fi
+	# dotfiles
+	if [ "$link_only" == true ]; then
+		link_dotfiles $source 
+	fi
 
-echo "################################################################################"
-echo
+	echo "################################################################################"
+	echo
+}
 
-
-
+# Run main if executed or exit if sourced
+(return 0 2>/dev/null) || main 
 
 # if [ -d "$vim_runtime" ]; then
 #     echo "Vim runtime already exists at $vim_runtime."
