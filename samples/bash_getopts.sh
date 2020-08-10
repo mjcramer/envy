@@ -2,13 +2,16 @@
 
 script_dir=$(cd $(dirname $0); pwd -P)
 
+A=false
+B=default
+
 while getopts ":ab:" opt; do
     case $opt in
     a)
-        exec=echo
+        A=true
         ;;
     b)
-        value=$OPTARG
+        B=$OPTARG
         ;;
     \?)
         echo "Invalid option: -$opt" >&2
@@ -22,10 +25,10 @@ while getopts ":ab:" opt; do
 done
 shift $(($OPTIND - 1))
 
-if [ "$EUID" -ne 0 ]
-  then echo "Please run as root"
-  exit
+if [ "${A}" == true ]; then
+	echo "B is ${B}"
+else 
+	echo "A is not set"
 fi
 
-echo "whoa..."
 

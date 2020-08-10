@@ -158,7 +158,11 @@ fi
 
 # Set window title 
 export TITLE_COMMAND='echo -ne "\033]0;$(echo $(basename `git rev-parse --show-toplevel 2> /dev/null || pwd`))\007"'
-export PROMPT_COMMAND="$PROMPT_COMMAND; eval '$TITLE_COMMAND'"
+#if [ -n "$PROMPT_COMMAND" ] ; then
+#	export PROMPT_COMMAND="$PROMPT_COMMAND; eval '$TITLE_COMMAND'"
+#else 
+	export PROMPT_COMMAND="eval '$TITLE_COMMAND'"
+#fi
 
 # Enable travis stuff 
 [ -f /Users/cramer/.travis/travis.sh ] && source /Users/cramer/.travis/travis.sh

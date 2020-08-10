@@ -1,4 +1,4 @@
 pycrypto
-powerline-status
+powerline-status 
 termcolor
 virtualenv
