@@ -5,29 +5,27 @@ source=$this_dir/dotfiles
 link="ln -svf"
 arch=$(uname -s)
 host=
-exec=
-link_only=false
 email="michael@cramer.name"
-brew_install=false
-python_install=false
-dotfile_link=false
-
+skip_brew=false
+skip_python=false
+skip_dotfiles=false
 shell="/usr/local/bin/fish"
+exec=
 
 while getopts ":tablp" opt; do
   case $opt in
     t)
       exec=echo ;;
     a)
-      brew_install=true
-      python_install=true 
-      dotfile_link=true ;;
+      skip_brew=true
+      skip_python=true
+      skip_dotfiles=true ;;
     l)
-      dotfile_link=true ;;
+      skip_dotfiles=true ;;
     b)
-      brew_install=true ;;
+      skip_brew=true ;;
     p)
-      python_install=true ;;
+      skip_python=true ;;
     \?)
       echo "Invalid option: -$opt" >&2
       exit 1 ;;
@@ -43,10 +41,10 @@ shift $(($OPTIND - 1))
 heading() {
     char=${2:--}
     echo
-    printf "${char}%.0s" $(seq -3 ${#1})
+#    printf "${char}%.0s" $(seq -3 ${#1})
     echo
     echo "${char} $1 ${char}"
-    printf "${char}%.0s" $(seq -3 ${#1})
+#    printf "${char}%.0s" $(seq -3 ${#1})
     echo 
 	echo
 }
@@ -57,7 +55,7 @@ function install_brew_packages {
   brew=$(which brew) # witch brew?
   if [ -z "$brew" ]; then
     echo "First, installing brew..."
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   else
     echo "Good, brew is installed..."
   fi
@@ -78,12 +76,12 @@ function handle_dotfile_directory {
     return
   fi
 
-  pushd $base 1>/dev/null
+  pushd $base 1>/dev/null || return
   for file in $(find * -type f); do
     $exec mkdir -p $(dirname $HOME/.$dir/$file)
     $exec $link $base/$file $HOME/.$dir/$file
   done
-  popd 1>/dev/null
+  popd 1>/dev/null || return
 }
 
 function link_dotfiles {
@@ -97,11 +95,13 @@ function link_dotfiles {
   echo "================================================================================"
   echo "--- Linking dotfiles in $1"
 
+  # shellcheck disable=SC2044
   for file in $(find $base -mindepth 1 -maxdepth 1 -type f -not -name "arch-*" -exec basename {} ';'); do
     dotfiles[$HOME/.$file]=$base/$file
   done
 
   for type in $arch $host; do
+    # shellcheck disable=SC2044
     for file in $(find $base -mindepth 1 -maxdepth 1 -type f -name "arch-$type.*" -exec basename {} ';'); do
       dotfiles[$HOME/${file#arch-$type*}]=$base/$file
     done
@@ -139,6 +139,14 @@ function config_misc {
 }
 
 function config_powerline {
+
+  cd $this_dir || return
+  # First install powerline fonts
+  git clone https://github.com/powerline/fonts.git --depth=1
+  cd fonts
+  ./install.sh
+  cd ..
+  rm -rf fonts
     # pip3 install powerline-status 
     powerline_location=$(pip3 show powerline-status | sed -E -n 's/^Location: (.+)/\1/p')
 
@@ -147,33 +155,37 @@ function config_powerline {
 function main {
 	heading "ENVironment deploYment" "#"
 
+  if [ $SHELL != $shell ]; then
+    echo "The user shell is set to $SHELL but should be $shell"
+    if [ -z "$(grep "$shell" /etc/shells)" ]; then
+      echo "Adding $shell to /etc/shells..."
+      echo "$shell" | sudo tee -a /etc/shells
+    fi
+    chsh -s $shell
+  fi
+
   # brew
-  if [ "$brew_install" == true ]; then
-    install_brew_packages 
-  else
+  if [ "$skip_brew" == true ]; then
     echo "Skipping brew install..."
+  else
+    install_brew_packages
 	fi
 
 	# python
-	if [ "$python_install" == true ]; then
-		install_python_modules 
-  else
+	if [ "$skip_python" == true ]; then
     echo "Skipping python install..."
+  else
+		install_python_modules
 	fi
 
 	# dotfiles
-	if [ "$dotfile_link" == true ]; then
-		link_dotfiles $source 
-  else
+	if [ "$skip_dotfiles" == true ]; then
     echo "Skipping dotfile link..."
+  else
+		link_dotfiles $source
 	fi
 
-
-  if [ $SHELL != $shell ]; then
-    echo "The user shell is set to $SHELL but should be $shell"
-  fi
-
-	echo
+  config_powerline
 }
 
 # Run main if executed or exit if sourced
