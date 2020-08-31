@@ -29,7 +29,7 @@ alias csp='csctl --context=prod'
 alias csap='csadmin --context=prod'
 
 # Set up path
-contains $fish_user_paths /path; or set -Ua fish_user_paths ~/envy/bin ~/go/bin /usr/local/bin /usr/local/sbin
+contains $fish_user_paths /path; or set -Ua fish_user_paths /usr/local/bin /usr/local/sbin ~/envy/bin ~/go/bin ~/.gem/ruby/2.6.0/bin
 
 # Set JDK
 if test -e /usr/libexec/java_home
