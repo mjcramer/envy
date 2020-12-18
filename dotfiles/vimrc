@@ -1,119 +1,145 @@
-set nocompatible " must be vimproved
 
+set nocompatible " must be vimproved
 filetype off " required
 
-filetype plugin indent on " required
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vundle Configuration
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-if has('gui_running')
-    set guioptions=cM
-    set cursorline
-endif
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" Keep Plugin commands between vundle#begin/end.
+Plugin 'powerline/powerline'
+Plugin 'tpope/vim-fugitive'
+Plugin 'scrooloose/syntastic'
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'elzr/vim-json'
+Plugin 'bronson/vim-trailing-whitespace'
+Plugin 'scrooloose/nerdtree'
+Plugin 'junegunn/fzf'
+Plugin 'fatih/vim-go'
+Plugin 'tpope/vim-sensible'
+Plugin 'flazz/vim-colorschemes'
+
+call vundle#end() " required
+
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put non-Plugin stuff after this line
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Powerline Configuration
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+python3 from powerline.vim import setup as powerline_setup
+python3 powerline_setup()
+python3 del powerline_setup
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NERDTree Configuration
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable nerdtree with <ctrl> + t
+nmap <C-t> :NERDTreeToggle<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Markdown Settings
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:vim_markdown_folding_level = 6
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Other Vim Settings
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " key behavior
-""""""""""""""""""""""""""""""""""""""""
-" backspace should delete
-set backspace=indent,eol,start
-set modelines=0
-" get rid of ex
-nnoremap Q <nop>
+"""""""""""""""
+"set modelines=0
+"" get rid of ex
+"nnoremap Q <nop>
+"
 
-" tabs and indents
-""""""""""""""""""""""""""""""""""""""""
+" tabs and indents "
+""""""""""""""""""""
 " size of a hard tabstop
-set tabstop=4
+set tabstop=2
 " size of an indent
-set shiftwidth=4
+set shiftwidth=2
 " a combination of spaces and tabs are used to simulate tab stops at a width other than the (hard) tabstop
-set softtabstop=4
+set softtabstop=2
 " make tab insert indents instead of tabs at the beginning of a line
-"set smarttab
+set smarttab
 " always uses spaces instead of tab characters
-"set expandtab
-" automatically indent based on previous line
-"set noautoindent
+set expandtab
 " copy the same indent characters as the line before
-"set copyindent
+set copyindent
 " preserve as much of previous indent characters as possible
-"set preserveindent
+set preserveindent
 
-" history and backups
-""""""""""""""""""""""""""""""""""""""""
-" remember commands and search history
-set history=1000
+" history and backups "
+"""""""""""""""""""""""
 " remember lots of undo
 set undolevels=1000
 " disable unnecessary backups
 set nobackup
 " no annoying swp files
-set noswapfile 
+set noswapfile
 
-" searching
-""""""""""""""""""""""""""""""""""""""""
+" searching "
+"""""""""""""
 " highlight search terms
 set hlsearch
-" show matches as you type
-set incsearch
 " never ignore case
 set noignorecase
-let hlstate=0
+"let hlstate=0
 nnoremap <C-k> :if (hlstate == 0) \| nohlsearch \| else \| set hlsearch \| endif \| let hlstate=1-hlstate<CR>
 
-" buffer management
-""""""""""""""""""""""""""""""""""""""""
-map <Leader>bv :bprevious<CR>
-map <Leader>bn :bnext<CR>
-map <Leader>bg :bdelete<CR>
-
-" splits
-""""""""""""""""""""""""""""""""""""""""
-" open new splits below current
-set splitbelow
-" open new splits to the right of current
-set splitright
-
-
-" nerdtree configuration
-""""""""""""""""""""""""""""""""""""""""
-" Enable nerdtree with <ctrl> + t
-map <Leader>t :NERDTreeToggle<CR>
-
-" always display the status bar
-set laststatus=2
-
-" Turn on syntax highlighting if it exists
-if has("syntax")
-  syntax on
-endif
+" buffer management "
+"""""""""""""""""""""
+"map <Leader>bv :bprevious<CR>
+"map <Leader>bn :bnext<CR>
+"map <Leader>bg :bdelete<CR>
+"
+"""""""""""""""""""""""""""""""""""""""""
+"" splits
+"""""""""""""""""""""""""""""""""""""""""
+"" open new splits below current
+"set splitbelow
+"" open new splits to the right of current
+"set splitright
+"
 set background=dark
-" colorscheme evening
+colorscheme 0x7A69_dark
 
-" display and characters
-set fillchars+=vert:\| 
-highlight VertSplit cterm=none ctermfg=none ctermbg=none
-
-" autocommands
-augroup source_files 
-    autocmd!
-    autocmd BufNewFile,BufRead *.java,*.scala,*.php,*.rb,*.py,*.xml,*.yml,*.json set number 
-augroup END
-
-" maps
-" control + l = toggle line numbers
-nmap <Leader>n :set invnumber<CR>
-nmap <Leader>q :qall<CR>
-nmap <Leader><M-q> :qall!<CR>
-nmap <Leader>w :wall<CR>
-nmap <Leader>p :set paste
-let pastestate=0
-nnoremap <Leader>p :if (pastestate == 0) \| set paste \| else \| set paste! \| endif \| let pastestate=1-pastestate<CR>
-
-set guifont=Inconsolata\ for\ Powerline:h15
-let g:Powerline_symbols = 'fancy'
-set encoding=utf-8
-set t_Co=256
-set fillchars+=stl:\ ,stlnc:\
-set term=xterm-256color
-set termencoding=utf-8
-
-set laststatus=2
-set t_Co=256
+"" display and characters
+"set fillchars+=vert:\| 
+"highlight VertSplit cterm=none ctermfg=none ctermbg=none
+"
+"" autocommands
+"augroup source_files 
+"    autocmd!
+"    autocmd BufNewFile,BufRead *.java,*.scala,*.php,*.rb,*.py,*.xml,*.yml,*.json set number 
+"augroup END
+"
+"" maps
+"" control + l = toggle line numbers
+"nmap <Leader>n :set invnumber<CR>
+"nmap <Leader>q :qall<CR>
+"nmap <Leader><M-q> :qall!<CR>
+"nmap <Leader>w :wall<CR>
+"nmap <Leader>p :set paste
+"let pastestate=0
+"nnoremap <Leader>p :if (pastestate == 0) \| set paste \| else \| set paste! \| endif \| let pastestate=1-pastestate<CR>
+"

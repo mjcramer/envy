@@ -6,40 +6,32 @@ link="ln -svf"
 arch=$(uname -s)
 host=
 exec=
-link_only=false
 email="michael@cramer.name"
 setup_brew=false
 setup_python=false
 setup_dotfiles=false
 
-while getopts ":tabpl" opt; do
-    case $opt in
+while getopts ":tabprdl" opt; do
+  case $opt in
     t)
-        exec=echo
-        ;;
-	a)
-		setup_brew=true
-		setup_dotfiles=true
-		setup_python=true
-		;;
-    l)
-		setup_dotfiles=true
-		;;
+      exec=echo ;;
+	  a)
+		  setup_brew=true
+		  setup_dotfiles=true
+		  setup_python=true ;;
+    d)
+		  setup_dotfiles=true ;;
     b)
-		setup_brew=true
-        ;;
+		  setup_brew=true ;;
     p)
-		setup_python=true
-        ;;
+		  setup_python=true ;;
     \?)
-        echo "Invalid option: -$opt" >&2
-        exit 1
-        ;;
+      echo "Invalid option: -$opt" >&2
+      exit 1 ;;
     :)
-        echo "Option -$opt requires an argument." >&2
-        exit 1
-        ;;
-    esac
+      echo "Option -$opt requires an argument." >&2
+      exit 1 ;;
+  esac
 done
 shift $(($OPTIND - 1))
 
@@ -52,26 +44,27 @@ heading() {
     echo
     echo "| $1 |"
     printf "${char}%.0s" $(seq -3 ${#1})
-    echo 
+    echo
 	echo
 }
 
 function install_brew_packages {
   heading "Installing brew packages... "
-  
+
   brew=$(which brew) # witch brew?
   if [ -z "$brew" ]; then
     echo "First, installing brew..."
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   else
     echo "Good, brew is installed..."
+    echo
   fi
-  $brew bundle 
+  $brew bundle
 }
 
 function install_python_modules {
   heading "Installing python modules..."
-  
+
   pip3 install -r $this_dir/python/requirements.txt
 }
 
@@ -111,11 +104,11 @@ function link_dotfiles {
       dotfiles[$HOME/${file#arch-$type*}]=$base/$file
     done
   done
-  
+
   for dotfile in "${!dotfiles[@]}"; do
     $exec $link ${dotfiles[$dotfile]} $dotfile
   done
-    
+
   for dir in $(find $base -mindepth 1 -maxdepth 1 -type d); do
     handle_dotfile_directory $dir
   done
@@ -129,22 +122,26 @@ function link_dotfiles {
 function config_misc {
   case $arch in
     Darwin)
-	# First, read in the user headers, in case there's something already there...
-	user_headers=$(defaults read com.apple.mail UserHeaders)
-	if [ $user_headers -eq $email ]; then
-		echo "Reply-To address already set to $email."
-	else
-		echo "Setting Reply-To address to $email."
-		defaults write com.apple.mail UserHeaders '{"Reply-To" = "'$email'";}'
-	fi
-	echo "Setting Finder to show full path in title."
-	defaults write com.apple.finder _FXShowPosixPathInTitle -bool true; killall Finder
+	    # First, read in the user headers, in case there's something already there...
+	    user_headers=$(defaults read com.apple.mail UserHeaders | plutil -convert json -o - - | jq -r '."Reply-To"')
+	    if [ $user_headers = $email ]; then
+		    echo "Reply-To address already set to $email."
+	    else
+		    echo "Setting Reply-To address to $email."
+		    defaults write com.apple.mail UserHeaders '{"Reply-To" = "'$email'";}'
+	    fi
+	    if [ $(defaults read com.apple.finder _FXShowPosixPathInTitle) -eq 0 ]; then
+	      echo "Setting Finder to show full path in title."
+	      defaults write com.apple.finder _FXShowPosixPathInTitle -bool true; killall Finder
+	    else
+	      echo "Showing full path in finder."
+	    fi
       ;;
   esac
 }
 
 function config_powerline {
-    # pip3 install powerline-status 
+    # pip3 install powerline-status
     powerline_location=$(pip3 show powerline-status | sed -E -n 's/^Location: (.+)/\1/p')
 
 }
@@ -154,30 +151,26 @@ function main {
 
 	# brew
 	if [ "$setup_brew" == true ]; then
-		install_brew_packages 
+		install_brew_packages
 	fi
 
 	# python
 	if [ "$setup_python" == true ]; then
-		install_python_modules 
+		install_python_modules
 	fi
 
 	# dotfiles
-	if [ "$link_only" == true ]; then
-		link_dotfiles $source 
+	if [ "$setup_dotfiles" == true ]; then
+		link_dotfiles $source
 	fi
+
+  # misc
+  config_misc
 
 	echo "################################################################################"
 	echo
 }
 
 # Run main if executed or exit if sourced
-(return 0 2>/dev/null) || main 
+(return 0 2>/dev/null) || main
 
-# if [ -d "$vim_runtime" ]; then
-#     echo "Vim runtime already exists at $vim_runtime."
-# else
-#     echo "Installing Vim runtime to $vim_runtime."
-#     git clone --depth=1 https://github.com/amix/vimrc.git $vim_runtime
-#     sh $vim_runtime/install_awesome_vimrc.sh
-# fi
