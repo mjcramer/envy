@@ -2,7 +2,7 @@
 import SbtPrompt.autoImport._
 import com.scalapenos.sbt.prompt._
 
-clippyColorsEnabled := true
+//clippyColorsEnabled := true
 
 // Adding this because idea isn't intellij-ent enough to understand ansi colors.
 promptTheme := PromptTheme(

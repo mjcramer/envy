@@ -15,18 +15,22 @@ if not functions -q fisher
 end
 
 # Set up aliases
-alias kubedm1='kubectl --context=gke_cloudstateengine_us-east1_dev-us-east-management-1'
-alias kubede1='kubectl --context=gke_cloudstateengine_us-east1_dev-us-east-execution-1'
-alias kubesm1='kubectl --context=gke_cloudstateengine_us-east1_stage-us-east-management-1'
-alias kubese1='kubectl --context=gke_cloudstateengine_us-east1_stage-us-east-execution-1'
-alias kubepm1='kubectl --context=gke_cloudstateengine_us-east1_prod-us-east-management-1'
-alias kubepe1='kubectl --context=gke_cloudstateengine_us-east1_prod-us-east-execution-1'
-alias csd='csctl --context=dev'
-alias csad='csadmin --context=dev'
-alias css='csctl --context=stage'
-alias csas='csadmin --context=stage'
-alias csp='csctl --context=prod'
-alias csap='csadmin --context=prod'
+alias kubectl-devman1='kubectl --context=gke_cloudstateengine_us-east1_dev-us-east-management-1'
+alias kubectl-devexec1='kubectl --context=gke_cloudstateengine_us-east1_dev-us-east-execution-1'
+alias kubectl-stageman1='kubectl --context=gke_cloudstateengine_us-east1_stage-us-east-management-1'
+alias kubectl-stageexec1='kubectl --context=gke_cloudstateengine_us-east1_stage-us-east-execution-1'
+alias kubectl-prodman1='kubectl --context=gke_cloudstateengine_us-east1_prod-us-east-management-1'
+alias kubectl-prodexec1='kubectl --context=gke_cloudstateengine_us-east1_prod-us-east-execution-1'
+alias kubectl-cramerman1='kubectl --context=gke_streamfitters-guild_us-east1_cramer-us-east-management-1'
+alias kubectl-cramerexec1='kubectl --context=gke_streamfitters-guild_us-east1_cramer-us-east-execution-1'
+alias akkasls-dev='akkasls --context=dev'
+alias akkaslsadmin-dev='akkaslsadmin --context=dev'
+alias akkasls-state='akkasls --context=stage'
+alias akkaslsadmin-stage='akkaslsadmin --context=stage'
+alias akkasls-prod='akkasls --context=prod'
+alias akkaslsadmin-prod='akkaslsadmin --context=prod'
+alias akkasls-cramer='akkasls --context=cramer'
+alias akkaslsadmin-cramer='akkaslsadmin --context=cramer'
 
 # Set up path
 contains $fish_user_paths /path; or set -Ua fish_user_paths /usr/local/bin /usr/local/sbin ~/envy/bin ~/go/bin ~/.gem/ruby/2.6.0/bin

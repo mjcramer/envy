@@ -26,6 +26,7 @@ Plugin 'junegunn/fzf'
 Plugin 'fatih/vim-go'
 Plugin 'tpope/vim-sensible'
 Plugin 'flazz/vim-colorschemes'
+Bundle 'dag/vim-fish'
 
 call vundle#end() " required
 

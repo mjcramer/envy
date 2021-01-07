@@ -124,17 +124,26 @@ function config_misc {
     Darwin)
 	    # First, read in the user headers, in case there's something already there...
 	    user_headers=$(defaults read com.apple.mail UserHeaders | plutil -convert json -o - - | jq -r '."Reply-To"')
-	    if [ $user_headers = $email ]; then
+	    if [ "$user_headers" = "$email" ]; then
 		    echo "Reply-To address already set to $email."
 	    else
 		    echo "Setting Reply-To address to $email."
 		    defaults write com.apple.mail UserHeaders '{"Reply-To" = "'$email'";}'
 	    fi
+
 	    if [ $(defaults read com.apple.finder _FXShowPosixPathInTitle) -eq 0 ]; then
 	      echo "Setting Finder to show full path in title."
 	      defaults write com.apple.finder _FXShowPosixPathInTitle -bool true; killall Finder
 	    else
 	      echo "Showing full path in finder."
+	    fi
+
+	    defaults write com.apple.Finder AppleShowAllFiles YES
+	    if [ $(defaults read com.apple.Finder AppleShowAllFiles) -eq 0 ]; then
+	      echo "Setting Finder to show full path in title."
+	      defaults write com.apple.Finder AppleShowAllFiles YES; killall Finder
+	    else
+	      echo "Showing all files in finder."
 	    fi
       ;;
   esac
