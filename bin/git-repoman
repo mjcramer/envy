@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import argparse
-from os.path import basename, getenv
+from os.path import basename
 import re
 import subprocess
 from github import Github
-from git import Repo
+#from git import Repo
 from termcolor import colored
 import datetime
 import fnmatch
