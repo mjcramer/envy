@@ -25,7 +25,7 @@ alias kubectl-cramerman1='kubectl --context=gke_streamfitters-guild_us-east1_cra
 alias kubectl-cramerexec1='kubectl --context=gke_streamfitters-guild_us-east1_cramer-us-east-execution-1'
 alias akkasls-dev='akkasls --context=dev'
 alias akkaslsadmin-dev='akkaslsadmin --context=dev'
-alias akkasls-state='akkasls --context=stage'
+alias akkasls-stage='akkasls --context=stage'
 alias akkaslsadmin-stage='akkaslsadmin --context=stage'
 alias akkasls-prod='akkasls --context=prod'
 alias akkaslsadmin-prod='akkaslsadmin --context=prod'
