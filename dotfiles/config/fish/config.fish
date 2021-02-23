@@ -15,14 +15,14 @@ if not functions -q fisher
 end
 
 # Set up aliases
-alias kubectl-devman1='kubectl --context=gke_cloudstateengine_us-east1_dev-us-east-management-1'
-alias kubectl-devexec1='kubectl --context=gke_cloudstateengine_us-east1_dev-us-east-execution-1'
-alias kubectl-stageman1='kubectl --context=gke_cloudstateengine_us-east1_stage-us-east-management-1'
-alias kubectl-stageexec1='kubectl --context=gke_cloudstateengine_us-east1_stage-us-east-execution-1'
-alias kubectl-prodman1='kubectl --context=gke_cloudstateengine_us-east1_prod-us-east-management-1'
-alias kubectl-prodexec1='kubectl --context=gke_cloudstateengine_us-east1_prod-us-east-execution-1'
-alias kubectl-cramerman1='kubectl --context=gke_streamfitters-guild_us-east1_cramer-us-east-management-1'
-alias kubectl-cramerexec1='kubectl --context=gke_streamfitters-guild_us-east1_cramer-us-east-execution-1'
+alias kubectl-devman1='kubectl --context=gke_akkaserverless-dev_us-east1_dev-us-east-management-1'
+alias kubectl-devexec1='kubectl --context=gke_akkaserverless-dev_us-east1_dev-us-east-execution-1'
+alias kubectl-stageman1='kubectl --context=gke_akkaserverless-stage_us-east1_stage-us-east-management-1'
+alias kubectl-stageexec1='kubectl --context=gke_akkaserverless-stage_us-east1_stage-us-east-execution-1'
+alias kubectl-prodman1='kubectl --context=gke_akkaserverless-prod_us-east1_prod-us-east-management-1'
+alias kubectl-prodexec1='kubectl --context=gke_akkaserverless-prod_us-east1_prod-us-east-execution-1'
+alias kubectl-cramerman1='kubectl --context=gke_akkaserverless-workbench_us-east1_cramer-us-east-management-1'
+alias kubectl-cramerexec1='kubectl --context=gke_akkaserverless-workbench_us-east1_cramer-us-east-execution-1'
 alias akkasls-dev='akkasls --context=dev'
 alias akkaslsadmin-dev='akkaslsadmin --context=dev'
 alias akkasls-stage='akkasls --context=stage'
@@ -35,7 +35,9 @@ alias akkaslsadmin-cramer='akkaslsadmin --context=cramer'
 # Set up path
 contains $fish_user_paths /path; or set -Ua fish_user_paths /usr/local/bin /usr/local/sbin ~/envy/bin ~/go/bin ~/.gem/ruby/2.6.0/bin
 
-# Set JDK
+# Set up jenv for managing JDK paths
+status --is-interactive; and source (jenv init -|psub)
+
 if test -e /usr/libexec/java_home
   set -x JAVA_HOME (/usr/libexec/java_home)
 end
