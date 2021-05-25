@@ -5,8 +5,20 @@ script_dir=$(cd $(dirname $0); pwd -P)
 A=false
 B=default
 
-while getopts ":ab:" opt; do
+usage() {
+    echo "This script does wonderful things!"
+    echo "Usage: ${0##*/} [flags] <parameter1> <parameter2> ..."
+    echo "  -h          Print usage instructions"
+    echo "  -a          Option A switch"
+    echo "  -b OPTARG   Option B with parameter"
+}
+
+while getopts ":hab:" opt; do
     case $opt in
+    h)
+        usage
+        exit 0
+        ;;
     a)
         A=true
         ;;

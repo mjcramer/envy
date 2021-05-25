@@ -4,7 +4,7 @@
 	email = mjcramer@gmail.com
 
 [push]
-	default = current 
+	default = current
 
 [branch]
 	autosetuprebase = always
@@ -13,7 +13,7 @@
 	ui = true
 
 [core]
-	editor = vim 
+	editor = vim
 	autocrlf = input
 	excludesfile = /Users/cramer/.gitignore_global
 
@@ -26,7 +26,6 @@
 
 [merge]
 	tool = bcomp
-	;tool = vimdiff 
 
 [difftool "bcomp"]
     trustExitCode = true

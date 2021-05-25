@@ -15,22 +15,20 @@ if not functions -q fisher
 end
 
 # Set up aliases
-alias kubectl-devman1='kubectl --context=gke_akkaserverless-dev_us-east1_dev-us-east-management-1'
-alias kubectl-devexec1='kubectl --context=gke_akkaserverless-dev_us-east1_dev-us-east-execution-1'
-alias kubectl-stageman1='kubectl --context=gke_akkaserverless-stage_us-east1_stage-us-east-management-1'
-alias kubectl-stageexec1='kubectl --context=gke_akkaserverless-stage_us-east1_stage-us-east-execution-1'
-alias kubectl-prodman1='kubectl --context=gke_akkaserverless-prod_us-east1_prod-us-east-management-1'
-alias kubectl-prodexec1='kubectl --context=gke_akkaserverless-prod_us-east1_prod-us-east-execution-1'
-alias kubectl-cramerman1='kubectl --context=gke_akkaserverless-workbench_us-east1_cramer-us-east-management-1'
-alias kubectl-cramerexec1='kubectl --context=gke_akkaserverless-workbench_us-east1_cramer-us-east-execution-1'
-alias akkasls-dev='akkasls --context=dev'
-alias akkaslsadmin-dev='akkaslsadmin --context=dev'
-alias akkasls-stage='akkasls --context=stage'
-alias akkaslsadmin-stage='akkaslsadmin --context=stage'
-alias akkasls-prod='akkasls --context=prod'
-alias akkaslsadmin-prod='akkaslsadmin --context=prod'
-alias akkasls-cramer='akkasls --context=cramer'
-alias akkaslsadmin-cramer='akkaslsadmin --context=cramer'
+set -Ux AS_ENVIRONMENTS dev stage prod
+set -Ux AS_WORKBENCHES ariano corey cramer danny edward fcosta heiko kikia koneru vbuser
+for environment in $AS_ENVIRONMENTS
+  alias kubectl-$environment-m='kubectl --context=gke_akkaserverless-'$environment'_us-east1_'$environment'-us-east-management-1'
+  alias kubectl-$environment-e='kubectl --context=gke_akkaserverless-'$environment'_us-east1_'$environment'-us-east-execution-1'
+  alias akkasls-$environment='akkasls --context='$environment
+  alias akkaslsadmin-$environment='akkaslsadmin --context='$environment
+end
+for environment in $AS_WORKBENCHES
+  alias kubectl-$environment-m='kubectl --context=gke_akkaserverless-workbench_us-east1_'$environment'-us-east-management-1'
+  alias kubectl-$environment-e='kubectl --context=gke_akkaserverless-workbench_us-east1_'$environment'-us-east-execution-1'
+  alias akkasls-$environment='akkasls --context='$environment
+  alias akkaslsadmin-$environment='akkaslsadmin --context='$environment
+end
 
 # Set up path
 contains $fish_user_paths /path; or set -Ua fish_user_paths /usr/local/bin /usr/local/sbin ~/envy/bin ~/go/bin ~/.gem/ruby/2.6.0/bin

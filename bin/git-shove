@@ -6,7 +6,6 @@
 
 message=${1}
 path=${2:-.}
-echo "'$message' '$path'"
 
 git -C $path rev-parse 2>/dev/null || { echo "This is not a git repository."; exit 1; }
 
