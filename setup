@@ -139,7 +139,7 @@ function config_misc {
 	    fi
 
 	    defaults write com.apple.Finder AppleShowAllFiles YES
-	    if [ $(defaults read com.apple.Finder AppleShowAllFiles) -eq 0 ]; then
+	    if [ $(defaults read com.apple.Finder AppleShowAllFiles) != "YES" ]; then
 	      echo "Setting Finder to show full path in title."
 	      defaults write com.apple.Finder AppleShowAllFiles YES; killall Finder
 	    else
