@@ -44,5 +44,5 @@ else
   topic=$1
 fi
 
-kafkacat -b ${bootstrap_servers} -C -t ${topic} -o beginning -D "" -e | protoc --decode_raw
+kcat -b ${bootstrap_servers} -C -t ${topic} -o beginning -D "" -e | protoc --decode_raw
 
