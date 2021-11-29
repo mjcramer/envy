@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-this_dir=$(cd $(dirname $0); pwd -P)
-source=$this_dir/dotfiles
+script_dir=$(cd $(dirname $0); pwd -P)
 link="ln -svf"
 arch=$(uname -s)
 host=
@@ -11,26 +10,49 @@ setup_brew=false
 setup_python=false
 setup_dotfiles=false
 
-while getopts ":tabprdl" opt; do
+
+usage() {
+    echo -e "This script sets up the shell environment.\n"
+    echo -e "Usage: ${0##*/} [flags] <parameter1> <parameter2> ..."
+    echo -e "  -h          Print usage instructions"
+    echo -e "  -a          Does everything"
+    echo -e "  -d          Links dotfiles"
+    echo -e "  -b          Run brew installer"
+    echo -e "  -p          Run pip installer"
+}
+
+
+while getopts ":htadbp" opt; do
   case $opt in
+    h)
+        usage
+        exit 0
+        ;;
     t)
-      exec=echo ;;
+      exec=echo
+      ;;
 	  a)
 		  setup_brew=true
 		  setup_dotfiles=true
-		  setup_python=true ;;
+		  setup_python=true
+      ;;
     d)
-		  setup_dotfiles=true ;;
+		  setup_dotfiles=true
+      ;;
     b)
-		  setup_brew=true ;;
+		  setup_brew=true
+      ;;
     p)
-		  setup_python=true ;;
+		  setup_python=true
+      ;;
     \?)
       echo "Invalid option: -$opt" >&2
-      exit 1 ;;
+      exit 1
+      ;;
     :)
       echo "Option -$opt requires an argument." >&2
-      exit 1 ;;
+      exit 1
+      ;;
   esac
 done
 shift $(($OPTIND - 1))
@@ -49,7 +71,8 @@ heading() {
 }
 
 function install_brew_packages {
-  heading "Installing brew packages... "
+  local brewfile=$1
+  heading "Installing brew packages from $brewfile... "
 
   brew=$(which brew) # witch brew?
   if [ -z "$brew" ]; then
@@ -59,13 +82,14 @@ function install_brew_packages {
     echo "Good, brew is installed..."
     echo
   fi
-  $brew bundle
+  $brew bundle --file $brewfile
 }
 
 function install_python_modules {
-  heading "Installing python modules..."
+  local requirements=$1
+  heading "Installing python modules from $requirements..."
 
-  pip3 install -r $this_dir/python/requirements.txt
+  pip3 install -r $requirements
 }
 
 function handle_dotfile_directory {
@@ -131,20 +155,12 @@ function config_misc {
 		    defaults write com.apple.mail UserHeaders '{"Reply-To" = "'$email'";}'
 	    fi
 
-	    if [ $(defaults read com.apple.finder _FXShowPosixPathInTitle) -eq 0 ]; then
-	      echo "Setting Finder to show full path in title."
-	      defaults write com.apple.finder _FXShowPosixPathInTitle -bool true; killall Finder
-	    else
-	      echo "Showing full path in finder."
-	    fi
+      echo "Setting Finder to show full path in title."
+	    defaults write com.apple.finder _FXShowPosixPathInTitle -bool true; killall Finder
 
-	    defaults write com.apple.Finder AppleShowAllFiles YES
-	    if [ $(defaults read com.apple.Finder AppleShowAllFiles) != "YES" ]; then
-	      echo "Setting Finder to show full path in title."
-	      defaults write com.apple.Finder AppleShowAllFiles YES; killall Finder
-	    else
-	      echo "Showing all files in finder."
-	    fi
+	    echo "Setting Finder to show full path in title."
+	    defaults write com.apple.Finder AppleShowAllFiles YES; killall Finder
+
       ;;
   esac
 }
@@ -160,17 +176,18 @@ function main {
 
 	# brew
 	if [ "$setup_brew" == true ]; then
-		install_brew_packages
+		install_brew_packages $script_dir/Brewfile
 	fi
 
 	# python
 	if [ "$setup_python" == true ]; then
-		install_python_modules
+		install_python_modules $script_dir/python/requirements.txt
 	fi
 
 	# dotfiles
 	if [ "$setup_dotfiles" == true ]; then
-		link_dotfiles $source
+		link_dotfiles $script_dir/dotfiles
+
 	fi
 
   # misc
@@ -182,4 +199,3 @@ function main {
 
 # Run main if executed or exit if sourced
 (return 0 2>/dev/null) || main
-
