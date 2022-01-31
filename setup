@@ -158,7 +158,7 @@ function config_misc {
       echo "Setting Finder to show full path in title."
 	    defaults write com.apple.finder _FXShowPosixPathInTitle -bool true; killall Finder
 
-	    echo "Setting Finder to show full path in title."
+	    echo "Setting Finder to show all files."
 	    defaults write com.apple.Finder AppleShowAllFiles YES; killall Finder
 
       ;;
