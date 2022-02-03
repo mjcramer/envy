@@ -44,7 +44,7 @@ alias now='date +"%T"'
 alias vbm='VBoxManage'
 
 # Read any other files
-for file in config_*.fish;
-  source $file; 
+for file in (status dirname)/config_*.fish;
+  source $file;
 end
 
