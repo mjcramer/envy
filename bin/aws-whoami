@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+aws sts get-caller-identity | jq -r .Arn
+
