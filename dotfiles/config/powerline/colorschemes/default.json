@@ -51,6 +51,10 @@
 		"cwd:current_folder":         { "fg": "brightyellow", "bg": "darkgreen", "attrs": ["bold"] }, 
 		"cwd:divider":                { "fg": "darkgreen", "bg": "darkestgreen", "attrs": [] },
 		"virtualenv":                 { "fg": "white", "bg": "darkcyan", "attrs": [] },
-		"attached_clients":           { "fg": "gray8", "bg": "gray0", "attrs": [] }
+		"attached_clients":           { "fg": "gray8", "bg": "gray0", "attrs": [] },
+    "k8s":                        { "fg": "white", "bg": "gray0", "attrs": [] },
+    "k8s_namespace":              { "fg": "white", "bg": "gray0", "attrs": [] },
+    "k8s_context":                { "fg": "white", "bg": "gray0", "attrs": [] },
+    "k8s:divider":                { "fg": "white", "bg": "gray0", "attrs": [] }
 	}
 }

@@ -2,6 +2,7 @@
 if status --is-interactive
 	# Set up powerline prompts for much sexy command line!
 	set VIRTUAL_ENV_DISABLE_PROMPT true
+	set POWERLINE_K8S_SHOW_NS 0
 	set powerline_root (pip3 show powerline-status | sed -E -n 's/^Location: (.+)/\1/p')
 	set fish_function_path $fish_function_path "$powerline_root/powerline/bindings/fish"
 	powerline-setup
