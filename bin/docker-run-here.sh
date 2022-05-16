@@ -3,14 +3,16 @@
 script_dir=$(cd $(dirname $0); pwd -P)
 
 echo=
-B=default
+shell=bash
+docker_opts=
 
 usage() {
-    echo "This script does wonderful things!"
-    echo "Usage: ${0##*/} [flags] <parameter1> <parameter2> ..."
+    echo "This script runs a given docker image in interactive mode"
+    echo "Usage: ${0##*/} [flags] <IMAGE> <ARGS>"
     echo "  -h          Print usage instructions"
-    echo "  -a          Option A switch"
-    echo "  -b OPTARG   Option B with parameter"
+    echo "  -o          Output command only"
+    echo "  -n          Use host networking"
+    echo "  -s SHELL    The shell to run (default: ${shell})"
 }
 
 while getopts ":hob:" opt; do
@@ -22,8 +24,11 @@ while getopts ":hob:" opt; do
     o)
         echo=echo
         ;;
-    b)
-        B=$OPTARG
+    n)
+        docker_opts="--network host"
+        ;;
+    s)
+        shell=$OPTARG
         ;;
     \?)
         echo "Invalid option: -$opt" >&2
@@ -39,7 +44,8 @@ shift $(($OPTIND - 1))
 
 
 $echo docker run --rm -it \
-  --volume $(pwd -P):/home/$(basename $(dirname $(pwd -P))) \
-  --entrypoint bash \
+  --volume $(pwd -P):/home/$(basename $(pwd -P)) \
+  --entrypoint ${shell} \
+  ${docker_opts} \
   $@
 

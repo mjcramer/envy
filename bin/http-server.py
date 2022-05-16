@@ -2,28 +2,30 @@
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
-from io import BytesIO
-
-
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+    def _set_headers(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
 
     def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b'Hello, world!')
+        self._set_headers()
+        self.wfile.write(b'Received GET request')
+        print(self.request)
 
     def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        body = self.rfile.read(content_length)
-        print(body)
-        self.send_response(200)
-        self.end_headers()
-        response = BytesIO()
-        response.write(b'This is POST request. ')
-        response.write(b'Received: ')
-        response.write(body)
-        self.wfile.write(response.getvalue())
+        self._set_headers()
+        content_length = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_length)
+        self.wfile.write(b'Received POST request')
+        print(self.request)
+        print(post_body)
+
+    def do_PUT(self):
+        self._set_headers()
+        self.wfile.write(b'Received PUT request')
+        print(self.request)
 
 
-httpd = HTTPServer(('localhost', 8080), SimpleHTTPRequestHandler)
+httpd = HTTPServer(('localhost', 8000), SimpleHTTPRequestHandler)
 httpd.serve_forever()
