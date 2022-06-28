@@ -36,9 +36,3 @@ function killjob {
 	kill -9 $(jobs -p $1)
 }
 
-function sbt-test {
-	sbt test | \
-		tail -1 | \
-		sed 's/^.*Total time: \(.*\), completed \(.*\)/Total time:: \1, completed \2/' | \
-		say --progress --interactive 
-}

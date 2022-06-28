@@ -1,4 +1,4 @@
-
+echo bash profle
 if [ -f ~/.bashrc ]; then
 	. ~/.bashrc
 fi

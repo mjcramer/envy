@@ -130,42 +130,17 @@ fi
 # Add current directory to path
 export PATH=$PATH:.
 
-# Set JDK 
-if [ -e ~/.jdk ]; then
-	export JAVA_HOME=$(head -n 1 ~/.jdk | sed 's/.*\:[ \t]*//')
-fi
-
 # Set go
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
-if [ -e /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk ]; then
-	source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc
-	source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc
-fi
-
-# Set powerline
-if [ -d ~/Library/Python/2.7/bin ]; then
-  export PATH=$PATH:~/Library/Python/2.7/bin
-fi
-#powerline_path=$(python -c 'import pkgutil; print pkgutil.get_loader("powerline").filename' 2>/dev/null)
+# Set up powerline prompts for much sexy command line!
 powerline_path=$(pip3 show powerline-status | sed -E -n 's/^Location: (.+)/\1/p')
-if [ -n "$powerline_path" ]; then
+if [ -f "$powerline_path/powerline/bindings/bash/powerline.sh" ]; then
   powerline-daemon -q
   POWERLINE_BASH_CONTINUATION=1
   POWERLINE_BASH_SELECT=1
   source ${powerline_path}/powerline/bindings/bash/powerline.sh
 fi
-
-# Set window title 
-export TITLE_COMMAND='echo -ne "\033]0;$(echo $(basename `git rev-parse --show-toplevel 2> /dev/null || pwd`))\007"'
-#if [ -n "$PROMPT_COMMAND" ] ; then
-#	export PROMPT_COMMAND="$PROMPT_COMMAND; eval '$TITLE_COMMAND'"
-#else 
-	export PROMPT_COMMAND="eval '$TITLE_COMMAND'"
-#fi
-
-# Enable travis stuff 
-[ -f /Users/cramer/.travis/travis.sh ] && source /Users/cramer/.travis/travis.sh
 
 # Local env 
 [ -f ~/.bash_local ] && source ~/.bash_local
