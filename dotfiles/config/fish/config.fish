@@ -19,7 +19,7 @@ end
 contains $fish_user_paths /path; or set -Ua fish_user_paths /usr/local/bin /usr/local/sbin ~/envy/bin ~/go/bin ~/.gem/ruby/2.6.0/bin
 
 # Set up jenv for managing JDK paths
-status --is-interactive; and source (jenv init -|psub)
+status --is-interactive; and jenv init - | source
 
 if test -e /usr/libexec/java_home
   set -x JAVA_HOME (/usr/libexec/java_home)
