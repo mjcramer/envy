@@ -1,5 +1,7 @@
-pycrypto
 powerline-status
 powerline-k8s
 termcolor
 virtualenv
+semantic_version
+GitPython
+
