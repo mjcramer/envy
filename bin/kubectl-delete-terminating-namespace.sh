@@ -3,14 +3,14 @@
 script_dir=$(cd $(dirname $0); pwd -P)
 
 A=false
-B=default
+PORT=8080
 
 usage() {
     echo "This script find namespaces in the 'Terminating' state and delete them." 
     echo "Usage: ${0##*/} [flags] <parameter1> <parameter2> ..."
     echo "  -h          Print usage instructions"
     echo "  -a          Option A switch"
-    echo "  -b OPTARG   Option B with parameter"
+    echo "  -p PORT     Port number for kubernetes control plane"
 }
 
 while getopts ":hab:" opt; do
@@ -22,8 +22,8 @@ while getopts ":hab:" opt; do
     a)
         A=true
         ;;
-    b)
-        B=$OPTARG
+    p)
+        PORT=$OPTARG
         ;;
     \?)
         echo "Invalid option: -$opt" >&2
@@ -48,7 +48,7 @@ for ns in $(kubectl get ns -o jsonpath='{.items[?(@.status.phase=="Terminating")
     kubectl get ns $ns -o json > /var/tmp/$ns.json
     sed -i '.bk' '/finalizers/{N;s/\n.*//;}' /var/tmp/$ns.json
     curl --silent --show-error -X PUT \
-      --data @/var/tmp/$ns.json http://localhost:8080/api/v1/namespaces/$ns/finalize \
+      --data @/var/tmp/$ns.json http://localhost:$PORT/api/v1/namespaces/$ns/finalize \
       --header "Content-Type: application/json" \
       --output /dev/null
     rm /var/tmp/$ns-ns.json$$ /var/tmp/$ns-ns.json$$.bk
