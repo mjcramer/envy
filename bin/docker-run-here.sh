@@ -3,7 +3,7 @@
 script_dir=$(cd $(dirname $0); pwd -P)
 
 echo=
-shell=bash
+entrypoint=bash
 docker_opts=
 
 usage() {
@@ -15,7 +15,7 @@ usage() {
     echo "  -s SHELL    The shell to run (default: ${shell})"
 }
 
-while getopts ":hob:" opt; do
+while getopts ":hone:" opt; do
     case $opt in
     h)
         usage
@@ -27,8 +27,8 @@ while getopts ":hob:" opt; do
     n)
         docker_opts="--network host"
         ;;
-    s)
-        shell=$OPTARG
+    e)
+        entrypoint=$OPTARG
         ;;
     \?)
         echo "Invalid option: -$opt" >&2
@@ -45,7 +45,7 @@ shift $(($OPTIND - 1))
 
 $echo docker run --rm -it \
   --volume $(pwd -P):/home/$(basename $(pwd -P)) \
-  --entrypoint ${shell} \
+  --entrypoint ${entrypoint} \
   ${docker_opts} \
   $@
 
