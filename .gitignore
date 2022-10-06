@@ -1,4 +1,2 @@
-.idea
-*.iml
-test
 Brewfile.lock.json
+dotfiles/config/fish/config_ironnet.fish
