@@ -19,7 +19,6 @@
 
 [diff]
 	tool = bcomp
-	;tool = vimdiff
 
 [difftool]
 	prompt = false
@@ -28,19 +27,18 @@
 	tool = bcomp
 
 [difftool "bcomp"]
-    trustExitCode = true
-    cmd = "/usr/local/bin/bcomp" "$LOCAL" "$REMOTE"
+  trustExitCode = true
+  cmd = "/usr/local/bin/bcomp" "$LOCAL" "$REMOTE"
 
 [merge]
-    tool = bcomp
-	;tool = vimdiff
+  tool = bcomp
 
 [mergetool]
-    prompt = false
+  prompt = false
 
 [mergetool "bcomp"]
-    trustExitCode = true
-    cmd = "/usr/local/bin/bcomp" "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+  trustExitCode = true
+  cmd = "/usr/local/bin/bcomp" "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
 
 [alias]
 	unstage = reset HEAD
@@ -54,7 +52,13 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+
 [pull]
 	rebase = true
+
 [init]
 	defaultBranch = main
+
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/
+
