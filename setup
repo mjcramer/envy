@@ -64,7 +64,7 @@ heading() {
     echo
     printf "${char}%.0s" $(seq -3 ${#1})
     echo
-    echo "| $1 |"
+    echo "${char} $1 ${char}"
     printf "${char}%.0s" $(seq -3 ${#1})
     echo
 	echo
@@ -77,7 +77,7 @@ function install_brew_packages {
   brew=$(which brew) # witch brew?
   if [ -z "$brew" ]; then
     echo "First, installing brew..."
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   else
     echo "Good, brew is installed..."
     echo
@@ -199,3 +199,4 @@ function main {
 
 # Run main if executed or exit if sourced
 (return 0 2>/dev/null) || main
+
