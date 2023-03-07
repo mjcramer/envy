@@ -9,26 +9,26 @@ docker_opts=
 usage() {
     echo "This script runs a given docker image in interactive mode"
     echo "Usage: ${0##*/} [flags] <IMAGE> <ARGS>"
-    echo "  -h          Print usage instructions"
-    echo "  -o          Output command only"
-    echo "  -n          Use host networking"
-    echo "  -s SHELL    The shell to run (default: ${shell})"
+    echo "  -h             Print usage instructions"
+    echo "  -c             Output command only"
+    echo "  -n             Use host networking"
+    echo "  -e ENTRYPOINT  The shell to run (default: ${entrypoint})"
 }
 
-while getopts ":hone:" opt; do
+while getopts ":hcne:" opt; do
     case $opt in
     h)
         usage
         exit 0
         ;;
-    o)
+    c)
         echo=echo
         ;;
     n)
-        docker_opts="--network host"
+        [[ -z $docker_opts ]] && docker_opts=="--network host" || docker_opts="$docker_opts --network host"
         ;;
     e)
-        entrypoint=$OPTARG
+        [[ -z $docker_opts ]] && docker_opts=="--entrypoint" || docker_opts="$docker_opts --entrypoint $OPTARG"
         ;;
     \?)
         echo "Invalid option: -$opt" >&2
@@ -48,4 +48,3 @@ $echo docker run --rm -it \
   --entrypoint ${entrypoint} \
   ${docker_opts} \
   $@
-
