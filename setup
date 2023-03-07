@@ -70,7 +70,7 @@ heading() {
 	echo
 }
 
-function install_brew_packages {
+install_brew_packages() {
   local brewfile=$1
   heading "Installing brew packages from $brewfile... "
 
@@ -85,14 +85,15 @@ function install_brew_packages {
   $brew bundle --file $brewfile
 }
 
-function install_python_modules {
+install_python_modules() {
   local requirements=$1
   heading "Installing python modules from $requirements..."
 
+  python3 -m pip install --upgrade pip
   pip3 install -r $requirements
 }
 
-function handle_dotfile_directory {
+handle_dotfile_directory() {
   local base=$1
   local dir=$(basename $base)
   if [ ! -d $base ]; then
@@ -108,7 +109,7 @@ function handle_dotfile_directory {
   popd 1>/dev/null
 }
 
-function link_dotfiles {
+link_dotfiles() {
   local base=$1
   if [ ! -d $base ]; then
     echo "$base directory does not exist, skipping..."
@@ -143,7 +144,7 @@ function link_dotfiles {
   echo
 }
 
-function config_misc {
+config_misc() {
   case $arch in
     Darwin)
 	    # First, read in the user headers, in case there's something already there...
@@ -165,13 +166,12 @@ function config_misc {
   esac
 }
 
-function config_powerline {
+config_powerline() {
     # pip3 install powerline-status
     powerline_location=$(pip3 show powerline-status | sed -E -n 's/^Location: (.+)/\1/p')
-
 }
 
-function main {
+main() {
 	heading "ENVironment deploYment" "#"
 
 	# brew
