@@ -7,8 +7,8 @@ if not functions -q fisher
 end
 
 # Set up tide prompt 
-set -g tide_left_prompt_items time pwd git newline
-set -g tide_right_prompt_items status cmd_duration context jobs node virtual_env rustc java php chruby go kubectl toolbox terraform aws nix_shell crystal
+set -g tide_left_prompt_items time pwd git 
+set -g tide_right_prompt_items status cmd_duration jobs virtual_env kubectl toolbox terraform aws 
 
 # Set up path
 contains $fish_user_paths /path; or set -Ua fish_user_paths /usr/local/bin /usr/local/sbin ~/envy/bin ~/go/bin 
