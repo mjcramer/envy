@@ -171,6 +171,17 @@ config_powerline() {
     powerline_location=$(pip3 show powerline-status | sed -E -n 's/^Location: (.+)/\1/p')
 }
 
+download_fonts() {
+  pushd /Library/Fonts
+  for font in mesloLGS_NF_regular mesloLGS_NF_bold mesloLGS_NF_italic mesloLGS_NF_bold_italic; do
+    echo $font
+    wget https://github.com/IlanCosman/tide/blob/assets/fonts/$font?raw=true $font
+    https://github.com/IlanCosman/tide/blob/assets/fonts/mesloLGS_NF_regular.ttf?raw=true
+  done
+  popd
+}
+
+
 main() {
 	heading "ENVironment deploYment" "#"
 
@@ -187,11 +198,11 @@ main() {
 	# dotfiles
 	if [ "$setup_dotfiles" == true ]; then
 		link_dotfiles $script_dir/dotfiles
-
 	fi
 
   # misc
   config_misc
+  download_fonts 
 
 	echo "################################################################################"
 	echo

@@ -1,13 +1,4 @@
 
-if status --is-interactive
-	# Set up powerline prompts for much sexy command line!
-	set -Ux VIRTUAL_ENV_DISABLE_PROMPT true
-	set -Ux POWERLINE_K8S_SHOW_NS 0
-	set powerline_root (pip3 show powerline-status | sed -E -n 's/^Location: (.+)/\1/p')
-	set fish_function_path $fish_function_path "$powerline_root/powerline/bindings/fish"
-	powerline-setup
-end
-
 # Set up fisher for installing fish packages
 if not functions -q fisher
     set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
@@ -15,11 +6,17 @@ if not functions -q fisher
     fish -c fisher
 end
 
+# Set up tide prompt 
+set -g tide_left_prompt_items time pwd git newline
+set -g tide_right_prompt_items status cmd_duration context jobs node virtual_env rustc java php chruby go kubectl toolbox terraform aws nix_shell crystal
+
 # Set up path
-contains $fish_user_paths /path; or set -Ua fish_user_paths /usr/local/bin /usr/local/sbin ~/envy/bin ~/go/bin ~/.gem/ruby/2.6.0/bin
+contains $fish_user_paths /path; or set -Ua fish_user_paths /usr/local/bin /usr/local/sbin ~/envy/bin ~/go/bin 
 
 # Set up jenv for managing JDK paths
-status --is-interactive; and jenv init - | source
+if test (which jenv)
+  status --is-interactive; and jenv init - | source
+end
 
 if test -e /usr/libexec/java_home
   set -x JAVA_HOME (/usr/libexec/java_home)
