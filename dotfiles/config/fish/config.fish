@@ -11,7 +11,7 @@ set -g tide_left_prompt_items time pwd git
 set -g tide_right_prompt_items status cmd_duration jobs virtual_env kubectl toolbox terraform aws 
 
 # Set up path
-contains $fish_user_paths /path; or set -Ua fish_user_paths /usr/local/bin /usr/local/sbin ~/envy/bin ~/go/bin 
+set -Ua fish_user_paths /usr/local/bin /usr/local/sbin ~/envy/bin ~/go/bin 
 
 # Set up jenv for managing JDK paths
 if test (which jenv)
