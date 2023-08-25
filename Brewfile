@@ -51,8 +51,6 @@ brew "grpcurl"
 brew "helm"
 brew "htop"
 brew "iftop"
-brew "influxdb", restart_service: true
-brew "influxdb-cli"
 brew "istioctl"
 brew "jenv"
 brew "jq"

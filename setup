@@ -8,8 +8,8 @@ exec=
 email="michael@cramer.name"
 setup_brew=false
 setup_python=false
-setup_dotfiles=false
-
+setup_fisher=false
+setup_misc=false
 
 usage() {
     echo -e "This script sets up the shell environment.\n"
@@ -19,10 +19,12 @@ usage() {
     echo -e "  -d          Links dotfiles"
     echo -e "  -b          Run brew installer"
     echo -e "  -p          Run pip installer"
+    echo -e "  -m          Run miscellany"
+    echo -e "  -f          Run fisher installer"
 }
 
 
-while getopts ":htadbp" opt; do
+while getopts ":htadbfpm" opt; do
   case $opt in
     h)
         usage
@@ -35,6 +37,7 @@ while getopts ":htadbp" opt; do
 		  setup_brew=true
 		  setup_dotfiles=true
 		  setup_python=true
+		  setup_misc=true
       ;;
     d)
 		  setup_dotfiles=true
@@ -44,6 +47,12 @@ while getopts ":htadbp" opt; do
       ;;
     p)
 		  setup_python=true
+		  ;;
+		f)
+		  setup_fisher=true
+		  ;;
+		m) 
+		  setup_misc=true
       ;;
     \?)
       echo "Invalid option: -$opt" >&2
@@ -93,6 +102,21 @@ install_python_modules() {
   pip3 install -r $requirements
 }
 
+install_fisher_plugins() {
+  local fishfile=$1
+  heading "Installing plugins for fish shell from $fishfile..."
+  for plugin in $(cat $fishfile); do
+    fish -c "fisher install $plugin"
+  done
+
+  pushd /Library/Fonts
+  for font in mesloLGS_NF_regular mesloLGS_NF_bold mesloLGS_NF_italic mesloLGS_NF_bold_italic; do
+    echo "Downloading $font font..."
+    wget -q https://github.com/IlanCosman/tide/blob/assets/fonts/$font.ttf?raw=true $font.ttf
+  done
+  popd
+}
+
 handle_dotfile_directory() {
   local base=$1
   local dir=$(basename $base)
@@ -138,7 +162,6 @@ link_dotfiles() {
     handle_dotfile_directory $dir
   done
 
-
   echo "--------------------------------------------------------------------------------"
   echo "--- Done with $base."
   echo
@@ -166,20 +189,7 @@ config_misc() {
   esac
 }
 
-config_powerline() {
-    # pip3 install powerline-status
-    powerline_location=$(pip3 show powerline-status | sed -E -n 's/^Location: (.+)/\1/p')
-}
 
-download_fonts() {
-  pushd /Library/Fonts
-  for font in mesloLGS_NF_regular mesloLGS_NF_bold mesloLGS_NF_italic mesloLGS_NF_bold_italic; do
-    echo $font
-    wget https://github.com/IlanCosman/tide/blob/assets/fonts/$font?raw=true $font
-    https://github.com/IlanCosman/tide/blob/assets/fonts/mesloLGS_NF_regular.ttf?raw=true
-  done
-  popd
-}
 
 
 main() {
@@ -195,14 +205,18 @@ main() {
 		install_python_modules $script_dir/python/requirements.txt
 	fi
 
-	# dotfiles
-	if [ "$setup_dotfiles" == true ]; then
-		link_dotfiles $script_dir/dotfiles
-	fi
+  # fisher
+  if [ "$setup_fisher" == true ]; then
+    install_fisher_plugins $script_dir/fishfile
+  fi
 
   # misc
-  config_misc
-  download_fonts 
+	if [ "$setup_misc" == true ]; then
+    config_misc
+    download_fonts 
+  fi
+	
+	link_dotfiles $script_dir/dotfiles
 
 	echo "################################################################################"
 	echo
