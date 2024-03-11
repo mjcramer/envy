@@ -22,8 +22,13 @@ if test -e /usr/libexec/java_home
   set -x JAVA_HOME (/usr/libexec/java_home)
 end
 
+# Set up fnm for node management
+if test (which fnm) 
+  fnm env --use-on-cd --version-file-strategy=recursive --corepack-enabled | source
+end
+
 # Set up completions
-for command in "cr" 
+for command in "cr op" 
   which $command >/dev/null && eval ($command completion fish)
 end
 
@@ -37,12 +42,7 @@ alias h='history'
 alias j='jobs -l'
 alias ping='ping -c 5'
 alias pingfast='ping -c 100 -s.2'
-which exa >/dev/null && alias ls='exa -G --group-directories-first'
-which exa >/dev/null && alias ll='exa -l --git --group-directories-first'
-which exa >/dev/null && alias l='exa -1 --group-directories-first'
-which exa >/dev/null && alias lsa='exa -aG --group-directories-first'
-which exa >/dev/null && alias lla='exa -al --git --group-directories-first'
-which exa >/dev/null && alias l.='exa -dG .* --group-directories-first'
+alias ls='lsd'
 alias now='date +"%T"'
 alias vbm='VBoxManage'
 

@@ -112,7 +112,7 @@ install_fisher_plugins() {
   pushd /Library/Fonts
   for font in mesloLGS_NF_regular mesloLGS_NF_bold mesloLGS_NF_italic mesloLGS_NF_bold_italic; do
     echo "Downloading $font font..."
-    wget -q https://github.com/IlanCosman/tide/blob/assets/fonts/$font.ttf?raw=true $font.ttf
+    wget -q https://github.com/IlanCosman/tide/blob/assets/fonts/$font.ttf?raw=true --output-document=$font.ttf
   done
   popd
 }

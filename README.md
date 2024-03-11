@@ -1,7 +1,23 @@
+# Install Envy
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mjcramer/nstall/HEAD/install.sh)"
+```
+
+
 # Workstation Environment 
 ---
-This repository contains the setup that I use for my workstations, mainly my personal laptop. 
+This repository contains the setup that I use for all my workstations. 
 
+
+# Applications
+
+- 1Password
+  The first application needed is 1password, as it contains all the credentials needed to set up most things.
+- iTerm 
+- Intellij Idea
+- Slack
+-
 
 
 # Setting

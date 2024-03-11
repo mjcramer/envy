@@ -1,23 +1,25 @@
-"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-"                       __   _ _ _ __ ___  _ __ ___                            "
-"                       \ \ / / | '_ ` _ \| '__/ __|                           "
-"                        \ V /| | | | | | | | | (__                            "
-"                         \_/ |_|_| |_| |_|_|  \___|                           "
-"                                                                              "
-"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+"                                            __   _ _ _ __ ___  _ __ ___                                              "
+"                                            \ \ / / | '_ ` _ \| '__/ __|                                             "
+"                                             \ V /| | | | | | | | | (__                                              "
+"                                              \_/ |_|_| |_| |_|_|  \___|                                             "
+"                                                                                                                     "
+"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+"                                                                                                                     "
+"                                                General settings                                                     "
+"======================================================================================================================
 
 " Be iMproved
 set nocompatible
-
-"=====================================================
-"" Vundle settings
-"=====================================================
 filetype off
+
+"======================================================================================================================
+"                                                Vundle settings
+"======================================================================================================================
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
     Plugin 'VundleVim/Vundle.vim'                " let Vundle manage Vundle, required
-    Plugin 'powerline/powerline'                 " Powerline fonts plugin
 
     "-------------------=== Code/Project navigation ===-------------
     Plugin 'scrooloose/nerdtree'                 " Project and file navigation
@@ -72,30 +74,6 @@ filetype plugin indent on
 " see :h vundle for more details or wiki for FAQ
 " Put non-Plugin stuff after this line
 
-"=====================================================
-"" General settings
-"=====================================================
-
-"""""""""""" Start Powerline Settings """"""""""""""""
-
-set guifont=Inconsolata\ for\ Powerline:h15
-let g:Powerline_symbols = 'fancy'
-set encoding=utf-8
-set t_Co=256
-set fillchars+=stl:\ ,stlnc:\
-set term=xterm-256color
-set termencoding=utf-8
-
-if has("gui_running")
-    let s:uname = system("uname")
-    if s:uname == "Darwin\n"
-        set guifont=Source\ Code\ Pro\ for\ Powerline:h15
-        colorscheme PaperColor              " set color scheme
-    endif
-endif
-
-""""""""""" END of PowerLine Settings  """""""""""""""
-
 "======================================================================================================================
 " Editor Settings
 "======================================================================================================================
@@ -107,8 +85,8 @@ set cursorline                              " shows line under the cursor's line
 set showmatch                               " shows matching part of bracket pairs (), [], {}
 set enc=utf-8	                              " utf-8 by default
 set backspace=indent,eol,start              " backspace removes all (indents, EOLs, start) What is start?
-set scrolloff=10                                 " let 10 lines before/after cursor during scroll
-set clipboard=unnamed                            " use system clipboard
+set scrolloff=10                            " let 10 lines before/after cursor during scroll
+set clipboard=                              " use system clipboard
 
 "======================================================================================================================
 " Tabs and Indents
@@ -124,7 +102,7 @@ set preserveindent                     " preserve as much of previous indent cha
 set autoindent                         " indent when moving to the next line while writing code
 
 "======================================================================================================================
-"" Buffers settings
+" Buffers settings
 "======================================================================================================================
 tab sball
 set switchbuf=useopen
@@ -134,7 +112,7 @@ nmap <F10> :bnext<CR>
 nmap <silent> <leader>q :SyntasticCheck # <CR> :bp <BAR> bd #<CR>
 
 "======================================================================================================================
-"" Search settings
+" Search settings
 "======================================================================================================================
 set incsearch                " incremental search
 set hlsearch                 " highlight search terms
