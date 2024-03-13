@@ -14,7 +14,8 @@ This repository contains the setup that I use for all my workstations.
 
 - 1Password
   The first application needed is 1password, as it contains all the credentials needed to set up most things.
-- iTerm 
+- Firefox
+- iTerm: https://iterm2.com/downloads/stable/iTerm2-3_4_23.zip 
 - Intellij Idea
 - Slack
 -
