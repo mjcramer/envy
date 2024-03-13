@@ -7,14 +7,7 @@ script_dir=$(
 link="ln -svf"
 arch=$(uname -s)
 email="michael@cramer.name"
-
-declare -A setup
-setup["brew"]=false
-setup["python"]=false
-setup["fisher"]=false
-setup["applications"]=false
-setup["dotfiles"]=false
-setup["misc"]=false
+components=("applications" "brew" "dotfiles" "fonts" "misc")
 
 WHITE='\033[1;39m'
 GREEN='\033[0;32m'
@@ -30,7 +23,6 @@ usage() {
   echo -e "Usage: ${0##*/} [flags] <parameter1> <parameter2> ..."
   echo -e "  -h                      Print usage instructions"
   echo -e "  -e EMAIL                Specifiy email address (default: ${email})"
-  echo -e "  -a                      Does everything"
   echo -e "  -c COMPONENT            A comma separated list of components to set up"
   echo -e "  -t                      Test mode, log actions but don't do anything"
   echo -e "  -y                      Yes to all prompts"
@@ -47,9 +39,6 @@ while getopts ":ac:e:hty" opt; do
     ;;
   e)
     email=${OPTARG}
-    ;;
-  a)
-    components=("applications" "brew" "dotfiles" "fonts" "misc")
     ;;
   c)
     IFS=',' read -r -a components <<< "$OPTARG"

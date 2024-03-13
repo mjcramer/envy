@@ -1,7 +1,7 @@
 # Install Envy
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mjcramer/nstall/HEAD/install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mjcramer/envy/master/setup)"
 ```
 
 
