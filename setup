@@ -28,7 +28,7 @@ usage() {
   echo -e "  -y                      Yes to all prompts"
 }
 
-while getopts ":ac:e:hty" opt; do
+while getopts ":c:e:hty" opt; do
   case $opt in
   h)
     usage
@@ -113,6 +113,7 @@ setup_applications() {
     "Spotify" "https://download.scdn.co/SpotifyInstaller.zip"
     # "Intellij Idea" "https://www.jetbrains.com/idea/download/download-thanks.html?platform=mac"
     # "Firefox" "https://download.mozilla.org/?product=firefox-latest-ssl&os=osx&lang=en-US"
+    "SizeUp" "https://www.irradiatedsoftware.com/downloads/?file=SizeUp.zip"
   )
 
   pushd ~/Downloads
@@ -131,6 +132,7 @@ setup_brew() {
   if [ -z "$brew" ]; then
     echo "First, installing brew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    brew="/opt/homebrew/bin/brew"
   else
     echo "Good, brew is installed..."
     echo

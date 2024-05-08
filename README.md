@@ -23,9 +23,10 @@ This repository contains the setup that I use for all my workstations.
 
 # Setting
 
-
-A bunch of useful and useless scripts that I've collected over time...
-
+Enable password-less sudo for user cramer:
+```text
+cramer ALL=(ALL) NOPASSWD: ALL
+```
 
 ## Installation
 
