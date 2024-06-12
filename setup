@@ -20,10 +20,11 @@ exec=
 
 usage() {
   echo -e "This script sets up this machine with all applications and tools needed for development.\n"
-  echo -e "Usage: ${0##*/} [flags] <parameter1> <parameter2> ..."
+  echo -e "Usage: $WHITE${0##*/}$RESET [flags] <parameter1> <parameter2> ..."
   echo -e "  -h                      Print usage instructions"
   echo -e "  -e EMAIL                Specifiy email address (default: ${email})"
-  echo -e "  -c COMPONENT            A comma separated list of components to set up"
+  echo -e "  -c COMPONENT            A comma separated list of components to set up. Available components are "
+  echo -e "                          $GREEN${components[@]}$RESET..."
   echo -e "  -t                      Test mode, log actions but don't do anything"
   echo -e "  -y                      Yes to all prompts"
 }
@@ -114,6 +115,7 @@ setup_applications() {
     # "Intellij Idea" "https://www.jetbrains.com/idea/download/download-thanks.html?platform=mac"
     # "Firefox" "https://download.mozilla.org/?product=firefox-latest-ssl&os=osx&lang=en-US"
     "SizeUp" "https://www.irradiatedsoftware.com/downloads/?file=SizeUp.zip"
+    "VS Code" "https://code.visualstudio.com/sha/download?build=stable&os=darwin-universal"
   )
 
   pushd ~/Downloads
@@ -226,6 +228,11 @@ setup_fonts() {
   popd
 }
 
+# I don't know where this should go.
+# git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+
+
 main() {
   heading "ENVironment deploYment" "#"
 
@@ -235,37 +242,6 @@ main() {
   done
   exit
 
-  # # brew
-  # if [ "$setup["brew"]" == true ]; then
-  # 	install_brew_packages $script_dir/Brewfile
-  # fi
-
-  # # python
-  # if [ "$setup["python"]" == true ]; then
-  # 	install_python_modules $script_dir/python/requirements.txt
-  # fi
-
-  # # fisher
-  # if [ "$setup["fisher"]" == true ]; then
-  #   install_fisher_plugins $script_dir/fishfile
-  # fi
-
-  # # applications
-  # if confirm "Download applications?"; then
-  #   install_downloads
-  # fi
-
-  # # misc
-  # if [ "$setup["misc"]" == true ]; then
-  #   config_misc
-  #   download_fonts
-  # fi
-
-  #	if confirm "(Re)Link dotfiles?"; then
-  #	  link_dotfiles $script_dir/dotfiles
-  #  fi
-
-  echo "################################################################################"
   echo
 }
 
