@@ -41,24 +41,24 @@ call vundle#begin()
  "   Plugin 'honza/vim-snippets'                 " snippets repo
 
     "-------------------=== Languages support ===-------------------
-"    Plugin 'tpope/vim-commentary'               " Comment stuff out
-"    Plugin 'mitsuhiko/vim-sparkup'              " Sparkup(XML/jinja/htlm-django/etc.) support
+    Plugin 'tpope/vim-commentary'               " Comment stuff out
+    Plugin 'mitsuhiko/vim-sparkup'              " Sparkup(XML/jinja/htlm-django/etc.) support
 "    Plugin 'Rykka/riv.vim'                      " ReStructuredText plugin
-"    Plugin 'Valloric/YouCompleteMe'             " Autocomplete plugin
+    Plugin 'Valloric/YouCompleteMe'             " Autocomplete plugin
 
     "-------------------=== Python  ===-----------------------------
-"    Plugin 'klen/python-mode'                   " Python mode (docs, refactor, lints...)
-"    Plugin 'scrooloose/syntastic'               " Syntax checking plugin for Vim
+    Plugin 'klen/python-mode'                   " Python mode (docs, refactor, lints...)
+    Plugin 'scrooloose/syntastic'               " Syntax checking plugin for Vim
 
 "    Plugin 'tpope/vim-fugitive'
 "    Plugin 'godlygeek/tabular'
     Plugin 'plasticboy/vim-markdown'
-"    Plugin 'elzr/vim-json'
-"    Plugin 'bronson/vim-trailing-whitespace'
+    Plugin 'elzr/vim-json'
+    Plugin 'bronson/vim-trailing-whitespace'
 "    Plugin 'junegunn/fzf'
 "    Plugin 'fatih/vim-go'
 "    Plugin 'tpope/vim-sensible'
-"    Bundle 'dag/vim-fish'
+    Bundle 'dag/vim-fish'
 
 call vundle#end()                           " required
 filetype on
