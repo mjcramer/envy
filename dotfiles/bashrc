@@ -145,3 +145,4 @@ fi
 # Local env 
 [ -f ~/.bash_local ] && source ~/.bash_local
 
+. "$HOME/.cargo/env"
