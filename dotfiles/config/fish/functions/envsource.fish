@@ -1,5 +1,5 @@
 # Defined in - @ line 1
-function envsource --description Source a standard env file and set as fish env variables
+function envsource --description "Source a standard env file and set as fish env variables"
     set -f envfile "$argv"
     if not test -f "$envfile"
         echo "Unable to load $envfile"
