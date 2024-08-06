@@ -2,7 +2,6 @@
 # Set up fisher for installing fish packages
 if not functions -q fisher
    curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
-#    fish -c fisher
 end
 
 # Set up tide prompt 
@@ -10,7 +9,7 @@ set -g tide_left_prompt_items time pwd git
 set -g tide_right_prompt_items status cmd_duration jobs virtual_env kubectl toolbox terraform aws 
 
 # Set up path
-set -Ua fish_user_paths /usr/local/bin /usr/local/sbin ~/envy/bin ~/go/bin '/Applications/IntelliJ IDEA.app/Contents/MacOS' 
+set -Ua fish_user_paths /opt/homebrew/bin ~/envy/bin ~/go/bin /usr/local/bin 
 
 # Set up homebrew
 if test -e /opt/homebrew/bin/brew 
@@ -26,12 +25,6 @@ end
 # otherwise it complains and uglies the shell
 # sudo ln -sfn /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk
 # jenv add /opt/homebrew/opt/openjdk@17
-
-## Set up fnm for node management
-# if test (which fnm)
-#   fnm env --use-on-cd --version-file-strategy=recursive --corepack-enabled | source
-#   fnm completions --shell fish | source
-# end
 
 # Set up completions
 for command in "cr op" 
@@ -57,3 +50,9 @@ for file in (status dirname)/config_*.fish;
   source $file;
 end
 
+# pnpm
+set -gx PNPM_HOME "/Users/cramer/Library/pnpm"
+if not string match -q -- $PNPM_HOME $PATH
+  set -gx PATH "$PNPM_HOME" $PATH
+end
+# pnpm end
