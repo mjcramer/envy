@@ -8,8 +8,20 @@ end
 set -g tide_left_prompt_items time pwd git 
 set -g tide_right_prompt_items status cmd_duration jobs virtual_env kubectl toolbox terraform aws 
 
+# Adds path element to path if not already contained
+function add_paths_to_fish_user_paths
+    # Loop through each path in the list
+    for path in $argv
+        # Check if the path is already in user paths 
+        if not contains $path $fish_user_paths
+          set -Ua fish_user_paths $path 
+          echo "Added $path to fish_user_paths..."
+        end
+    end
+end
+
 # Set up path
-set -Ua fish_user_paths /opt/homebrew/bin ~/envy/bin ~/go/bin /usr/local/bin 
+add_paths_to_fish_user_paths /opt/homebrew/bin ~/envy/bin ~/go/bin /usr/local/bin 
 
 # Set up homebrew
 if test -e /opt/homebrew/bin/brew 
@@ -20,11 +32,6 @@ end
 if test (which jenv)
   status --is-interactive; and jenv init - | source
 end
-
-# Need to figure out how to run commands to install a default java and add it to jenv,
-# otherwise it complains and uglies the shell
-# sudo ln -sfn /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk
-# jenv add /opt/homebrew/opt/openjdk@17
 
 # Set up completions
 for command in "cr op" 
@@ -43,16 +50,9 @@ alias ping='ping -c 5'
 alias pingfast='ping -c 100 -s.2'
 alias ls='lsd'
 alias now='date +"%T"'
-alias vbm='VBoxManage'
 
 # Read any other files
 for file in (status dirname)/config_*.fish;
   source $file;
 end
 
-# pnpm
-set -gx PNPM_HOME "/Users/cramer/Library/pnpm"
-if not string match -q -- $PNPM_HOME $PATH
-  set -gx PATH "$PNPM_HOME" $PATH
-end
-# pnpm end
